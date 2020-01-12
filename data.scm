@@ -6,7 +6,7 @@
       (if r
           (cdr r)
           (if (null? defaults)
-              (error 'get (format "key not found: ~a" key))
+              (error 'get (format "key not found: ~a not in ~a" key d))
               (car defaults))))))
 
 (define upd!

@@ -43,13 +43,19 @@
   '((if . :if)
     (set! . :set!)
     (begin . :begin)
-    (+ . :+)))
+    (+ . :+)
+    (speculate . :speculate)
+    (undo . :undo)
+    (commit . :commit)))
 (define
   tag-children
   '((:if :condition :consequent :alternative)
     (:set! :variable :value)
     (:+ . :operand)
-    (:begin . :exp)))
+    (:begin . :exp)
+    (:speculate :exp)
+    (:undo)
+    (:commit)))
 
 (define (tag-of x)
   (get tags x))
