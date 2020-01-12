@@ -8,7 +8,7 @@ exploration of reflective architectures in Scheme
 
 in [Chez Scheme](http://cisco.github.io/ChezScheme/).
 
-## Roadmap of Toys
+## Roadmap
 
 - [x] `imp`: low-level imperative language
   - [x] no loops (outer loop handled at process level)
@@ -39,6 +39,7 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
 - [ ] `err`: error recovery
 - [ ] `eff`: effects
   - worlds
+- [ ] `spec`: verification
 - [ ] `rea`: reactive programming
 - [ ] `rel`: relational programming
 - [ ] `neu`: neuro-symbolics
