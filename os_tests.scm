@@ -11,6 +11,15 @@
         result))
      (:env . ((result . 1) (n . ,n))))))
 
+(define (double_process p)
+  (full-copy
+   `((:exp
+      .
+      (begin
+       (block p)
+       (* 2 (get (get p ':env) ':result #f))))
+     (:env . ((p . ,p))))))
+
 (eg
  (run (factorial_process 6))
  '((:result . 6) (result . 6) (n . 5)))
