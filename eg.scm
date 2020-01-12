@@ -9,8 +9,8 @@
              (begin
                (format #t "Failed: ~a~%Expected: ~a~%Computed: ~a~%"
                        'tested-expression expected produced)
-               (error 'eg
-                      (format "Failed: ~a~%Expected: ~a~%Computed: ~a~%"
-                              'tested-expression expected produced)))))))))
+               (error
+                'eg
+                (format "failed test ~a" 'tested-expression)))))))))
 
 

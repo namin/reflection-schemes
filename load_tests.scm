@@ -3,3 +3,4 @@
 (load "imp_tests.scm")
 (load "jit_tests.scm")
 (load "os_tests.scm")
+(load "jit_os_tests.scm")

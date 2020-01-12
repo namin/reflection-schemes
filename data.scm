@@ -70,4 +70,5 @@
             lcar))))
 
 (define (repeat n thunk)
-  (map (lambda (i) (thunk)) (range 0 n)))
+  (map (lambda (i) (thunk)) (range 0 n))
+  'done)
