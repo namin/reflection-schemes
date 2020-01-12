@@ -1,8 +1,22 @@
+;; A process is a dictionary containing keys:
+;; - :exp, a program step
+;; - :env, a key-value store that, for `imp`, maps directly to variable-value store in the program.
+;; - :eval, a Scheme procedure taking the self process, the :exp and the :env. Defaults to `imp`'s `evl`.
+
+;; The `os` adds a key :status to a process which can be:
+;; - :ready, when a process is ready to be ran for a step.
+;; - :running, when a process is selected to run for a step.
+;; - :blocked, when a process suspends waiting for another process to complete.
+;; - :terminated, when after a step, a process has the special key :done set to #t in its :env.
+;; The `os` steps through the processes FIFO, re-queining after each step.
+
+;; The impure API allows processes to add processes to the queue.
+
 (define (run process)
   (call/cc
    (lambda (k)
      (let* ((jump (lambda (env) (upd! process ':env (lambda (old) env)) (k env)))
-            (process (cons (cons ':suspend! jump) process)) ;; don't make it eternal!
+            (process (cons (cons ':suspend! jump) process)) ;; don't make the binding eternal!
             (env
              ((get process ':eval evl)
               process
