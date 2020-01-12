@@ -2,3 +2,4 @@
 (load "imp.scm")
 (load "jit.scm")
 (load "os.scm")
+(load "dbg.scm")

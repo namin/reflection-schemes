@@ -9,15 +9,21 @@ exploration of reflective architectures in Scheme
 ## Roadmap of Toys
 
 - [x] `imp`: low-level imperative language
-  - no loops (outer loop handled at process level)
-  - speculation
+  - [x] no loops (outer loop handled at process level)
+  - [x] speculation
+  - [ ] list and dictionary
+  - [ ] reify and reflect
 - [x] `jit`: jit for `imp`
-  - speculates on conditionals
+  - [x] speculates on conditionals
 - [x] `os`: operating system
-  - interleaves process runs until all done
+  - [x] interleaves process runs until all done
+  - [ ] suspend and ready
+- [ ] `dbg`: debugger
+  - [x] process tracer as higher-order process
+  - [ ] process tracer as a reflective program
+  - [ ] ...
 - [ ] `lam`: high-level functional language
 - [ ] `mea`: instrumentation for `lam`
-- [ ] `dbg`: debugger
 - [ ] `mix`: mixing `imp` and `lam`
 - [ ] `tow`: reflective tower of interpreters
 - [ ] `sem`: changing semantics on the fly
