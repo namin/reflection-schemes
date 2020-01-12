@@ -16,11 +16,17 @@ exploration of reflective architectures in Scheme
 - [x] `os`: operating system
   - interleaves process runs until all done
 - [ ] `lam`: high-level functional language
-- [ ] `ben`: instrumentation for `lam`
+- [ ] `mea`: instrumentation for `lam`
+- [ ] `dbg`: debugger
 - [ ] `mix`: mixing `imp` and `lam`
-- [ ] `sem`: changing semantics
+- [ ] `tow`: reflective tower of interpreters
+- [ ] `sem`: changing semantics on the fly
 - [ ] `his`: recording and projecting history
+- [ ] `pov`: point of views
+- [ ] `lay`: pyramid of abstractions
 - [ ] `com`: communication
+  - pi-calculus
 - [ ] `err`: error recovery
 - [ ] `eff`: effects
+  - worlds
 - [ ] `rea`: reactive programming
