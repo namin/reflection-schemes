@@ -45,7 +45,7 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
 
 ## Alternatives
 
-- [ ] instead of ubiqutous dictionary
+- [ ] instead of ubiquitous dictionary
   - [ ] [generic procedures](https://www.gnu.org/software/mit-scheme/documentation/mit-scheme-sos/Generic-Procedures.html#Generic-Procedures) (MIT Scheme)
   - [ ] [protocols](https://clojure.org/reference/protocols) (Clojure)
   - [ ] Q: can the mechanism be reified, reflected and copied like dictionaries?
