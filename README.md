@@ -6,6 +6,8 @@ exploration of reflective architectures in Scheme
 
 `(load "load.scm")`
 
+in [Chez Scheme](http://cisco.github.io/ChezScheme/).
+
 ## Roadmap of Toys
 
 - [x] `imp`: low-level imperative language
@@ -37,3 +39,10 @@ exploration of reflective architectures in Scheme
   - worlds
 - [ ] `rea`: reactive programming
 - [ ] `rel`: relational programming
+
+## Alternatives
+
+- [ ] instead of ubiqutous dictionary
+  - [ ] [generic procedures](https://www.gnu.org/software/mit-scheme/documentation/mit-scheme-sos/Generic-Procedures.html#Generic-Procedures) (MIT Scheme)
+  - [ ] [protocols](https://clojure.org/reference/protocols) (Clojure)
+  - [ ] Q: can the mechanism be reified, reflected and copied like dictionaries?
