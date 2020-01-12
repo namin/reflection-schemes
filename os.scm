@@ -58,14 +58,17 @@
         (step*!))))
 
 (define (block! process_to_block process_to_terminate)
-  (upd! process_to_block
-        ':status
-        (lambda (old)
-          (if (eq? old ':terminated)
-              old
-              (begin
-                (add-alive-process! (unblock-monitor process_to_block process_to_terminate))
-                ':blocked)))))
+  (if (not (eq? 'terminated (get process_to_terminate ':status)))
+      (upd! process_to_block
+            ':status
+            (lambda (old)
+              (if (eq? old ':terminated)
+                  old
+                  (begin
+                    (if (not (memq process_to_terminate alive_processes))
+                        (add-alive-process! process_to_terminate))
+                    (add-alive-process! (unblock-monitor process_to_block process_to_terminate))
+                    ':blocked))))))
 
 (define (unblock-monitor process_blocked process_to_terminate)
   (full-copy

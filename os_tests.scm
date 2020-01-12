@@ -16,8 +16,8 @@
    `((:exp
       .
       (begin
-       (block p)
-       (* 2 (get (get p ':env) ':result #f))))
+        (block p)
+        (* 2 (get (get p ':env) ':result #f))))
      (:env . ((p . ,p))))))
 
 (eg
@@ -38,3 +38,9 @@
     (get (get f6 ':env) ':result)
     (get (get f5 ':env) ':result)))
  '(720 120))
+
+(eg_TODO
+ (let ((d6 (double_process (factorial_process 6))))
+   (step* (list d6))
+   (get (get d6 ':env) ':result))
+ 1440)

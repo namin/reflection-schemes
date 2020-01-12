@@ -13,4 +13,10 @@
                 'eg
                 (format "failed test ~a" 'tested-expression)))))))))
 
+(define-syntax eg_TODO
+  (syntax-rules ()
+    ((_ tested-expression expected-result)
+     (begin
+       (format #t "TODO ~a\n" 'tested-expression)))))
+
 
