@@ -33,6 +33,10 @@
  720)
 
 (eg
+ (run-only (factorial_process 6))
+ 720)
+
+(eg
  (let ((f6 (factorial_process 6))
        (f5 (factorial_process 5)))
    (step* (list f6 f5))
@@ -47,3 +51,7 @@
    (step*!)
    (get (get d6 ':env) ':result))
  1440)
+
+(eg
+ (run-program-once '(* 1 2 3))
+ 6)

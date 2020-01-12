@@ -101,3 +101,16 @@
          env))
      (:exp . ())
      (:env . ((:done . #f))))))
+
+(define (run-only process)
+  (set! alive_processes (list process))
+  (step*!)
+  (get (get process ':env) ':result))
+
+(define (run-program-once exp)
+  (run-only (full-copy
+             `((:exp . (begin
+                         (set! result ,exp)
+                         (set! :done #t)
+                         result))
+               (:env . ((result . :none)))))))
