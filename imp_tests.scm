@@ -1,4 +1,40 @@
 (eg
+ (evl 1 '())
+ '((:result . 1)))
+
+(eg
+ (evl '(+ 1 2 3) '())
+ '((:result . 6)))
+
+(eg
+ (evl '(if #t 1 2) '())
+ '((:result . 1)))
+
+(eg
+ (evl '(begin 1) '())
+ '((:result . 1)))
+
+(eg
+ (evl '(begin (set! my 1) (+ 1 my)) '())
+ '((my . 1) (:result . 2)))
+
+(eg
+ (evl '(begin (speculate (set! my 1)) (commit) 1) '())
+ '((:result . 1) (my . 1)))
+
+(eg
+ (evl '(begin (speculate (set! my 1)) (commit) my) '())
+ '((:result . 1) (my . 1)))
+
+(eg
+ (evl '(begin (speculate (set! my 1)) (undo) 1) '())
+ '((:result . 1)))
+
+(eg
+ (evl '(begin (set! my 2) (speculate (set! my 1)) (undo) my) '())
+ '((my . 2) (:result . 2)))
+
+(eg
  (ast-of 1)
  '((:tag . :number) (:exp . 1) (:children)))
 

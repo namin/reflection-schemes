@@ -1,5 +1,3 @@
-;; dictionaries
-
 (define get
   (lambda (d key . defaults)
     (let ((r (assoc key d)))
@@ -20,8 +18,21 @@
               (error 'upd! (format "key not found: ~a" key))
               (cons (cons key (val-upd (car defaults))) d))))))
 
+(define (copy a)
+  (map (lambda (kv) (cons (car kv) (cdr kv))) a))
 
-;; lists
+(define (transfer! from to)
+  (if (null? from)
+      to
+      (transfer! (cdr from) (upd! to (caar from) (lambda (old) (cdar from)) 0))))
+
+(define (last xs)
+  (cond
+    ((null? xs)
+     (error 'last (format "last of empty list")))
+    ((null? (cdr xs))
+     (car xs))
+    (else (last (cdr xs)))))
 
 (define (range a b)
   (if (< a b)

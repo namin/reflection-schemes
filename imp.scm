@@ -1,6 +1,5 @@
 ;; tiny imperative language
 
-;; interface
 (define (analyze program)
   (ast-of program))
 
@@ -21,11 +20,65 @@
                     (cons (car kv) context))))
            cs))) context)))
 
+(define (evl exp env)
+  (let ((envs (imp_eval (analyze exp) (list env))))
+    (if (= (length envs) 1)
+        (car envs)
+        (error 'evl (format "too much speculation")))))
 
-(define (to-id prefix context)
-  (string->symbol (apply string-append (map symbol->string (cons prefix context)))))
+(define (imp_eval ast envs)
+  (let ((set-result!
+         (lambda (v)
+           (set-car! envs (upd! (car envs) ':result (lambda (old) v) 0))
+           envs))
+        (tag (get ast ':tag)))
+    (cond
+      ((eq? tag ':variable)
+       (set-result! (get (car envs) (get ast ':exp))))
+      ((or (eq? tag ':number) (eq? tag ':boolean))
+       (set-result! (get ast ':exp)))
+      (else
+       (let ((cs (get ast ':children)))
+         (cond
+           ((eq? tag ':if)
+            (let ((envs (imp_eval (get cs ':condition) envs)))
+              (if (get (car envs) ':result)
+                  (imp_eval (get cs ':consequent) envs)
+                  (imp_eval (get cs ':alternative) envs))))
+           ((eq? tag ':set!)
+            (let* ((x (get (get cs ':variable) ':exp))
+                   (envs (imp_eval (get cs ':value) envs))
+                   (v (get (car envs) ':result)))
+              (set-car! envs (upd! (car envs) x (lambda (old) v) 0))
+              envs))
+           ((eq? tag ':+)
+            (imp_eval_list (map cdr cs) envs (lambda (vs) (apply + vs))))
+           ((eq? tag ':begin)
+            (imp_eval_list (map cdr cs) envs (lambda (vs) (last vs)) '()))
+           ((eq? tag ':speculate)
+            (imp_eval (get cs ':exp) (cons (copy (car envs)) envs)))
+           ((eq? tag ':undo)
+            (cdr envs))
+           ((eq? tag ':commit)
+            (set-car!
+             (cdr envs)
+             (transfer! (car envs) (car (cdr envs))))
+            (cdr envs))
+           (else (error 'imp_eval (format "unknown ast ~a" ast)))))))))
 
-;; implementation
+(define (imp_eval_list exps envs f . defaults)
+  (apply imp_eval_list_iter exps envs f '() defaults))
+
+(define (imp_eval_list_iter exps envs f vs . defaults)
+  (cond
+    ((null? exps)
+     (set-car! envs (upd! (car envs) ':result (lambda (old) (f (reverse vs))) 0))
+     envs)
+    (else
+     (let* ((envs (imp_eval (car exps) envs))
+            (v (apply get (car envs) ':result defaults)))
+       (apply imp_eval_list_iter (cdr exps) envs f (cons v vs) defaults)))))
+
 (define (program-of ast)
   (get (traverse! ast refresh-exp) ':exp))
 
@@ -37,6 +90,9 @@
        (lambda (old)
          (cons (reverse-tag-of (get ast ':tag))
                (map (lambda (kv) (get (cdr kv) ':exp)) (get ast ':children)))))))
+
+(define (to-id prefix context)
+  (string->symbol (apply string-append (map symbol->string (cons prefix context)))))
 
 (define
   tags
