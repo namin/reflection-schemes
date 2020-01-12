@@ -85,3 +85,7 @@
 (define (repeat n thunk)
   (map (lambda (i) (thunk)) (range 0 n))
   'done)
+
+(define (log x)
+  (format #t "~a\n" x)
+  x)

@@ -1,5 +1,3 @@
-;; tiny imperative language
-
 (define (analyze program)
   (ast-of program))
 
@@ -75,7 +73,7 @@
                      (val (geti vs 2)))
                  (upd! dict key (lambda (old) val) #f)))))
            ((eq? tag ':display)
-            (let ((envs (imp_eval this (get cs ':exp) env)))
+            (let ((envs (imp_eval this (get cs ':exp) envs)))
               (display (get (car envs) ':result))
               envs))
            ((eq? tag ':newline)
@@ -89,6 +87,15 @@
                   (begin
                     (block! this p)
                     ((get this ':suspend!) (car envs))))))
+           ((eq? tag ':meta)
+            (set-car!
+             envs
+             (get
+              (evl this
+                   (cons 'begin (map (lambda (kc) (get (cdr kc) ':exp)) cs))
+                   (list (cons ':env (car envs))))
+              ':env))
+            envs)
            ((eq? tag ':speculate)
             (imp_eval this (get cs ':exp) (cons (copy (car envs)) envs)))
            ((eq? tag ':undo)
@@ -152,6 +159,7 @@
     (display . :display)
     (newline . :newline)
     (block . :block)
+    (meta . :meta)
     (speculate . :speculate)
     (undo . :undo)
     (commit . :commit)))
@@ -170,6 +178,7 @@
     (:display :exp)
     (:newline)
     (:block :p)
+    (:meta . :exp)
     (:speculate :exp)
     (:undo)
     (:commit)))

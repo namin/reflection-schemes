@@ -22,6 +22,8 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
     - [ ] currently not rolledback in speculation
   - [x] blocking process call
   - [ ] reify and reflect
+    - [x] homo-reflective
+    - [ ] hetero-reflective
   - [ ] Q: semantics of re-entrancy?
     - [ ] Q: where to re-enter after a blocking call?
   - [ ] Q: semantics of speculation?

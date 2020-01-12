@@ -10,3 +10,4 @@
 (test_load "os_tests.scm")
 (test_load "jit_os_tests.scm")
 (test_load "tracer_tests.scm")
+(test_load "imp_reflection_tests.scm")
