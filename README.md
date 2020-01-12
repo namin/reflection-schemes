@@ -41,7 +41,7 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
   - pi-calculus
 - [ ] `err`: error recovery
 - [ ] `eff`: effects
-  - worlds
+  - worlds ([PDF](http://www.vpri.org/pdf/tr2011001_final_worlds.pdf))
 - [ ] `spec`: verification
 - [ ] `rea`: reactive programming
 - [ ] `rel`: relational programming
