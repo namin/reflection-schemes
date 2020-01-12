@@ -8,7 +8,7 @@ exploration of reflective architectures in Scheme
 
 in [Chez Scheme](http://cisco.github.io/ChezScheme/).
 
-## Roadmap of Toys
+## Roadmap
 
 - [x] `imp`: low-level imperative language
   - [x] no loops (outer loop handled at process level)
