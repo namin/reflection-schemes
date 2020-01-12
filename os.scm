@@ -10,19 +10,35 @@
   (if (null? processes)
       (error 'step "nothing to do")
       (let* ((process (car processes))
-             (process (upd! process ':status (lambda (old) ':running) #f)))
-        (run process)
-        (if (get (get process ':env) ':done #f)
+             (status (get process ':status ':ready))
+             (process
+              (cond
+                ((eq? ':ready status)
+                 (upd! process ':status (lambda (old) ':running) #f))
+                ((eq? ':block status)
+                 #f)
+                ((eq? ':running status)
+                 (error 'step (format "process already running")))
+                ((eq? ':terminated status)
+                 (error 'step (format "process already terminated")))
+                (else
+                 (error 'step (format "unknown process status ~a" status))))))
+        (if process
             (begin
-              (upd! process ':status (lambda (old) ':terminated))
-              (cdr processes))
-            (begin
-              (upd! process ':status
-                    (lambda (status)
-                      (if (eq? ':running status)
-                          ':ready
-                          status)))
-              (append (cdr processes) (list process)))))))
+              (run process)
+              (if (get (get process ':env) ':done #f)
+                  (begin
+                    (upd! process ':status (lambda (old) ':terminated))
+                    (cdr processes))
+                  (begin
+                    (upd! process ':status
+                          (lambda (status)
+                            (if (eq? ':running status)
+                                ':ready
+                                status)))
+                    (append (cdr processes) (list process)))))
+            ;; warning: step* will loop if all processes are blocked
+            (append (cdr processes) (list process))))))
 
 (define (step* processes)
   (if (null? processes)
