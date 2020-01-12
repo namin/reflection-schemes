@@ -14,7 +14,10 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
   - [x] no loops (outer loop handled at process level)
   - [x] speculation
   - [ ] list and dictionary
-  - [ ] blocking process call
+    - [x] quote
+    - [x] get by key
+    - [ ] update by key
+  - [x] blocking process call
   - [ ] reify and reflect
 - [x] `jit`: jit for `imp`
   - [x] speculates on conditionals
