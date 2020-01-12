@@ -22,9 +22,9 @@
                 ((eq? ':blocked status)
                  process)
                 ((eq? ':running status)
-                 (error 'step (format "process already running")))
+                 (error 'step (format "process already running ~a" process)))
                 ((eq? ':terminated status)
-                 (error 'step (format "process already terminated")))
+                 (error 'step (format "process already terminated ~a" process)))
                 (else
                  (error 'step (format "unknown process status ~a" status))))))
         (if (not (eq? ':blocked (get process ':status)))
@@ -70,7 +70,7 @@
         (step*!))))
 
 (define (block! process_to_block process_to_terminate)
-  (if (not (eq? 'terminated (get process_to_terminate ':status #f)))
+  (if (not (eq? ':terminated (get process_to_terminate ':status #f)))
       (upd! process_to_block
             ':status
             (lambda (old)
@@ -92,8 +92,8 @@
            (if (eq? ':blocked status_blocked)
                (if (eq? ':terminated status_to_terminate)
                    (begin
-                     (upd! process_blocked ':status ':ready)
-                     (upd! env ':done #t))
+                     (upd! process_blocked ':status (lambda (old) ':ready))
+                     (upd! env ':done (lambda (old) #t)))
                    ;; still blocked
                    )
                ;; nothing to do

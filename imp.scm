@@ -69,9 +69,11 @@
            ((eq? tag ':block)
             (let* ((envs (imp_eval this (get cs ':p) envs))
                    (p (get (car envs) ':result)))
-              (block! this p)
-              (let ((envs (set-result! #f)))
-                ((get this ':suspend!) (car envs)))))
+              (if (eq? ':terminated (get p ':status #f))
+                  envs ;; carry on
+                  (begin
+                    (block! this p)
+                    ((get this ':suspend!) (car envs))))))
            ((eq? tag ':speculate)
             (imp_eval this (get cs ':exp) (cons (copy (car envs)) envs)))
            ((eq? tag ':undo)

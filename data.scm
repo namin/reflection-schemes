@@ -16,7 +16,13 @@
             d)
           (if (null? defaults)
               (error 'upd! (format "key not found: ~a" key))
-              (cons (cons key (val-upd (car defaults))) d))))))
+              (let ((new (list (cons key (val-upd (car defaults))))))
+                (if (null? d)
+                    new
+                    (begin
+                      ;; put at end to ensure we don't lose references
+                      (append! d new)
+                      d))))))))
 
 (define (copy a)
   (map (lambda (kv) (cons (car kv) (cdr kv))) a))
@@ -25,6 +31,13 @@
   (cond
     ((null? x) x)
     ((pair? x) (cons (full-copy (car x)) (full-copy (cdr x))))
+    (else x)))
+
+(define (full-copy-but ks x)
+  (cond
+    ((null? x) x)
+    ((memq x ks) x)
+    ((pair? x) (cons (full-copy-but ks (car x)) (full-copy-but ks (cdr x))))
     (else x)))
 
 (define (transfer! from to)

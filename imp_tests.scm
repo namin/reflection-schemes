@@ -16,7 +16,7 @@
 
 (eg
  (evl #f '(begin (set! my 1) (+ 1 my)) '())
- '((my . 1) (:result . 2)))
+ '((:result . 2) (my . 1)))
 
 (eg
  (evl #f '(begin (speculate (set! my 1)) (commit) 1) '())
@@ -32,7 +32,7 @@
 
 (eg
  (evl #f '(begin (set! my 2) (speculate (set! my 1)) (undo) my) '())
- '((my . 2) (:result . 2)))
+ '( (:result . 2) (my . 2)))
 
 (eg
  (ast-of 1)

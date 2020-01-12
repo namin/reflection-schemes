@@ -12,17 +12,19 @@
      (:env . ((result . 1) (n . ,n))))))
 
 (define (double_process p)
-  (full-copy
+  (full-copy-but (list p)
    `((:exp
       .
       (begin
         (block p)
-        (* 2 (get (get p ':env) ':result #f))))
+        (set! result (* 2 (get (get p ':env) ':result #f)))
+        (set! :done #t)
+        result))
      (:env . ((:result . #f) (p . ,p))))))
 
 (eg
  (run (factorial_process 6))
- '((:result . 6) (result . 6) (n . 5)))
+ '((result . 6) (n . 5) (:result . 6) ))
 
 (eg
  (let ((f6 (factorial_process 6)))

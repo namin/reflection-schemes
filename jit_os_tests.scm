@@ -11,10 +11,10 @@
              (begin (set! result (* n result)) (set! n (- n 1)))))
        result)
       (:env
-       (:hits:alternative:exp0 . 0)
-       (:hits:consequent:exp0 . 0)
        (result . 1)
-       (n . 6))))
+       (n . 6)
+       (:hits:consequent:exp0 . 0)
+       (:hits:alternative:exp0 . 0))))
 
   (define f6_repeat3
     '((:exp
@@ -33,11 +33,11 @@
              (commit)))
        result)
       (:env
-       (:result . 120)
-       (:hits:alternative:exp0 . 3)
-       (:hits:consequent:exp0 . 0)
        (result . 120)
-       (n . 3))))
+       (n . 3)
+       (:hits:consequent:exp0 . 0)
+       (:hits:alternative:exp0 . 3)
+       (:result . 120))))
 
   (define f6_overdone
     '((:exp
