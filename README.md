@@ -40,7 +40,7 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
   - worlds
 - [ ] `rea`: reactive programming
 - [ ] `rel`: relational programming
-- [ ] `neu`: neuro-symbolic system
+- [ ] `neu`: neuro-symbolics
 - [ ] `cog`: consciousness
 
 ## Alternatives
