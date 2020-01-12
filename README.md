@@ -21,6 +21,9 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
   - [x] blocking process call
   - [ ] reify and reflect
   - [ ] Q: semantics of re-entrancy?
+    - [ ] Q: where to re-enter after a blocking call?
+  - [ ] Q: semantics of speculation?
+    - [ ] Q: are all side effects excluded?
 - [x] `jit`: jit for `imp`
   - [x] speculates on conditionals
 - [x] `os`: operating system
