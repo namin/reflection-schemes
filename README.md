@@ -17,8 +17,10 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
     - [x] quote
     - [x] get by key
     - [ ] update by key
+    - [ ] add sugar for get and update chains
   - [x] blocking process call
   - [ ] reify and reflect
+  - [ ] Q: semantics of re-entrancy?
 - [x] `jit`: jit for `imp`
   - [x] speculates on conditionals
 - [x] `os`: operating system
@@ -55,3 +57,9 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
   - [ ] [protocols](https://clojure.org/reference/protocols) (Clojure)
   - [ ] actors instead of processes?
   - [ ] Q: can the mechanism be reified, reflected and copied like dictionaries?
+
+- [ ] instead of Scheme
+  - [ ] Python to experiment with neuro-symbolics?
+  - [ ] Rust to fine-tune concurrency model?
+  - [ ] Clojure for batteries and to fine-tune mutation model?
+  - [ ] Coq, Agda, or Idris for a verified system?
