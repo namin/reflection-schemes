@@ -38,6 +38,7 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
 - [ ] `err`: error recovery
 - [ ] `eff`: effects
   - worlds
+- [ ] `spec`: verification
 - [ ] `rea`: reactive programming
 - [ ] `rel`: relational programming
 - [ ] `neu`: neuro-symbolics
