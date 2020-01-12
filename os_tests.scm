@@ -18,7 +18,7 @@
       (begin
         (block p)
         (* 2 (get (get p ':env) ':result #f))))
-     (:env . ((p . ,p))))))
+     (:env . ((:result . #f) (p . ,p))))))
 
 (eg
  (run (factorial_process 6))
@@ -39,8 +39,9 @@
     (get (get f5 ':env) ':result)))
  '(720 120))
 
-(eg_TODO
+(eg
  (let ((d6 (double_process (factorial_process 6))))
-   (step* (list d6))
+   (set! alive_processes (list d6))
+   (step*!)
    (get (get d6 ':env) ':result))
  1440)
