@@ -30,3 +30,4 @@ exploration of reflective architectures in Scheme
 - [ ] `eff`: effects
   - worlds
 - [ ] `rea`: reactive programming
+- [ ] `rel`: relational programming
