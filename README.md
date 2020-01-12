@@ -23,9 +23,14 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
   - [x] blocking process call
   - [ ] reify and reflect
     - [x] homo-reflective
+      - [x] environment reified
+      - [ ] continuation reified?
+      - [ ] evaluator reified?
     - [ ] hetero-reflective
   - [ ] Q: semantics of re-entrancy?
     - [ ] Q: where to re-enter after a blocking call?
+    - [ ] Q: do I need a program counter?
+    - [ ] Q: how would program counter interfere with self-modifying code?
   - [ ] Q: semantics of speculation?
 - [x] `jit`: jit for `imp`
   - [x] speculates on conditionals
