@@ -9,11 +9,20 @@
 (define (step processes)
   (if (null? processes)
       (error 'step "nothing to do")
-      (let ((process (car processes)))
+      (let* ((process (car processes))
+             (process (upd! process ':status (lambda (old) ':running) #f)))
         (run process)
         (if (get (get process ':env) ':done #f)
-            (cdr processes)
-            (append (cdr processes) (list process))))))
+            (begin
+              (upd! process ':status (lambda (old) ':terminated))
+              (cdr processes))
+            (begin
+              (upd! process ':status
+                    (lambda (status)
+                      (if (eq? ':running status)
+                          ':ready
+                          status)))
+              (append (cdr processes) (list process)))))))
 
 (define (step* processes)
   (if (null? processes)

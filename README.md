@@ -19,7 +19,8 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
   - [x] speculates on conditionals
 - [x] `os`: operating system
   - [x] interleaves process runs until all done
-  - [ ] suspend and ready
+  - [x] process status: ready, running, terminated
+  - [ ] process status: blocked
   - [ ] Q: how do an evaluator (a closure) becomes a process?
 - [ ] `dbg`: debugger
   - [x] process tracer as higher-order process
