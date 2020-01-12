@@ -1,5 +1,5 @@
 (define (test1)
-  (define f6 (factorial_process 6))
+  (define f6 (factorial-process 6))
   (define t6 (tracer f6))
 
   (eg

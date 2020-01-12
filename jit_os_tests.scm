@@ -1,5 +1,5 @@
-(define (jit_os_test1)
-  (define f6_init
+(define (jit-os-test1)
+  (define f6-init
     '((:exp
        begin
        (if (= n 0)
@@ -16,7 +16,7 @@
        (:hits:consequent:exp0 . 0)
        (:hits:alternative:exp0 . 0))))
 
-  (define f6_repeat3
+  (define f6-repeat3
     '((:exp
        begin
        (begin
@@ -39,7 +39,7 @@
        (:hits:alternative:exp0 . 3)
        (:result . 120))))
 
-  (define f6_overdone
+  (define f6-overdone
     '((:exp
        begin
        (begin
@@ -61,18 +61,18 @@
        (:result . 720) (:done . #t))
       (:status . :terminated)))
 
-  (define f6 (factorial_process 6))
+  (define f6 (factorial-process 6))
   (define j6 (jit! f6))
 
-  (eg f6_init f6)
+  (eg f6-init f6)
 
   (repeat 3 (lambda () (run f6) (run j6)))
 
-  (eg f6_repeat3 f6)
+  (eg f6-repeat3 f6)
 
   (step* (list j6 f6))
 
-  (eg (get f6 ':exp) (get f6_init ':exp))
+  (eg (get f6 ':exp) (get f6-init ':exp))
   (eg (get f6 ':env)
       '((result . 720) (n . 1)
         (:hits:consequent:exp0 . 1) (:hits:alternative:exp0 . 5)
@@ -80,11 +80,11 @@
 
   (repeat 5 (lambda () (run f6)))
   (run j6)
-  (eg (get f6 ':exp) (get f6_init ':exp))
+  (eg (get f6 ':exp) (get f6-init ':exp))
 
   (repeat  60 (lambda () (run f6)))
   (run j6)
-  (eg f6_overdone f6)
+  (eg f6-overdone f6)
   )
 
-(jit_os_test1)
+(jit-os-test1)

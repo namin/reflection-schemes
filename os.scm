@@ -63,50 +63,50 @@
       'done
       (step* (step processes))))
 
-(define alive_processes '())
+(define alive-processes '())
 (define (add-alive-process! process)
-  (set! alive_processes (append alive_processes (list process))))
+  (set! alive-processes (append alive-processes (list process))))
 
 (define (step!)
-  (if (null? alive_processes)
+  (if (null? alive-processes)
       '()
-      (let* ((processes alive_processes)
-             (_ (set! alive_processes '()))
+      (let* ((processes alive-processes)
+             (_ (set! alive-processes '()))
              (processes (step processes)))
-        (set! alive_processes (append alive_processes processes))
-        alive_processes)))
+        (set! alive-processes (append alive-processes processes))
+        alive-processes)))
 
 (define (step*!)
-  (if (null? alive_processes)
+  (if (null? alive-processes)
       'done
       (begin
         (step!)
         (step*!))))
 
-(define (block! process_to_block process_to_terminate)
-  (if (not (eq? ':terminated (get process_to_terminate ':status #f)))
-      (upd! process_to_block
+(define (block! process-to-block process-to-terminate)
+  (if (not (eq? ':terminated (get process-to-terminate ':status #f)))
+      (upd! process-to-block
             ':status
             (lambda (old)
               (if (eq? old ':terminated)
                   old
                   (begin
-                    (if (not (memq process_to_terminate alive_processes))
-                        (add-alive-process! process_to_terminate))
-                    (add-alive-process! (unblock-monitor process_to_block process_to_terminate))
+                    (if (not (memq process-to-terminate alive-processes))
+                        (add-alive-process! process-to-terminate))
+                    (add-alive-process! (unblock-monitor process-to-block process-to-terminate))
                     ':blocked))))))
 
-(define (unblock-monitor process_blocked process_to_terminate)
+(define (unblock-monitor process-blocked process-to-terminate)
   (full-copy
    `((:eval
       .
       ,(lambda (this exp env)
-         (let ((status_to_terminate (get process_to_terminate ':status #f))
-               (status_blocked (get process_blocked ':status)))
-           (if (eq? ':blocked status_blocked)
-               (if (eq? ':terminated status_to_terminate)
+         (let ((status-to-terminate (get process-to-terminate ':status #f))
+               (status-blocked (get process-blocked ':status)))
+           (if (eq? ':blocked status-blocked)
+               (if (eq? ':terminated status-to-terminate)
                    (begin
-                     (upd! process_blocked ':status (lambda (old) ':ready))
+                     (upd! process-blocked ':status (lambda (old) ':ready))
                      (upd! env ':done (lambda (old) #t)))
                    ;; still blocked
                    )
@@ -117,7 +117,7 @@
      (:env . ((:done . #f))))))
 
 (define (run-only process)
-  (set! alive_processes (list process))
+  (set! alive-processes (list process))
   (step*!)
   (get (get process ':env) ':result))
 

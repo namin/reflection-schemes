@@ -19,12 +19,12 @@
            cs))) context)))
 
 (define (evl this exp env)
-  (let ((envs (imp_eval this (analyze exp) (list env))))
+  (let ((envs (imp-eval this (analyze exp) (list env))))
     (if (= (length envs) 1)
         (car envs)
         (error 'evl (format "too much speculation")))))
 
-(define (imp_eval this ast envs)
+(define (imp-eval this ast envs)
   (let ((set-result!
          (lambda (v)
            (set-car! envs (upd! (car envs) ':result (lambda (old) v) 0))
@@ -39,25 +39,25 @@
        (let ((cs (get ast ':children)))
          (cond
            ((eq? tag ':if)
-            (let ((envs (imp_eval this (get cs ':condition) envs)))
+            (let ((envs (imp-eval this (get cs ':condition) envs)))
               (if (get (car envs) ':result)
-                  (imp_eval this (get cs ':consequent) envs)
-                  (imp_eval this (get cs ':alternative) envs))))
+                  (imp-eval this (get cs ':consequent) envs)
+                  (imp-eval this (get cs ':alternative) envs))))
            ((eq? tag ':set!)
             (let* ((x (get (get cs ':variable) ':exp))
-                   (envs (imp_eval this (get cs ':value) envs))
+                   (envs (imp-eval this (get cs ':value) envs))
                    (v (get (car envs) ':result)))
               (set-car! envs (upd! (car envs) x (lambda (old) v) 0))
               envs))
            ((or (eq? tag ':+) (eq? tag ':-) (eq? tag ':*) (eq? tag ':=))
             (let ((op (get tag-ops tag)))
-              (imp_eval_list this (map cdr cs) envs (lambda (vs) (apply op vs)))))
+              (imp-eval-list this (map cdr cs) envs (lambda (vs) (apply op vs)))))
            ((eq? tag ':begin)
-            (imp_eval_list this (map cdr cs) envs (lambda (vs) (last vs)) '()))
+            (imp-eval-list this (map cdr cs) envs (lambda (vs) (last vs)) '()))
            ((eq? tag ':quote)
             (set-result! (get (get cs ':exp) ':exp)))
            ((eq? tag ':get)
-            (imp_eval_list
+            (imp-eval-list
              this (map cdr cs) envs
              (lambda (vs)
                (let ((dict (car vs))
@@ -65,7 +65,7 @@
                      (defaults (cddr vs)))
                  (apply get dict key defaults)))))
            ((eq? tag ':update!)
-            (imp_eval_list
+            (imp-eval-list
              this (map cdr cs) envs
              (lambda (vs)
                (let ((dict (geti vs 0))
@@ -73,14 +73,14 @@
                      (val (geti vs 2)))
                  (upd! dict key (lambda (old) val) #f)))))
            ((eq? tag ':display)
-            (let ((envs (imp_eval this (get cs ':exp) envs)))
+            (let ((envs (imp-eval this (get cs ':exp) envs)))
               (display (get (car envs) ':result))
               envs))
            ((eq? tag ':newline)
             (newline)
             envs)
            ((eq? tag ':block)
-            (let* ((envs (imp_eval this (get cs ':p) envs))
+            (let* ((envs (imp-eval this (get cs ':p) envs))
                    (p (get (car envs) ':result)))
               (if (eq? ':terminated (get p ':status #f))
                   envs ;; carry on
@@ -97,7 +97,7 @@
               ':env))
             envs)
            ((eq? tag ':speculate)
-            (imp_eval this (get cs ':exp) (cons (copy (car envs)) envs)))
+            (imp-eval this (get cs ':exp) (cons (copy (car envs)) envs)))
            ((eq? tag ':undo)
             (cdr envs))
            ((eq? tag ':commit)
@@ -105,20 +105,20 @@
              (cdr envs)
              (transfer! (car envs) (car (cdr envs))))
             (cdr envs))
-           (else (error 'imp_eval this (format "unknown ast ~a" ast)))))))))
+           (else (error 'imp-eval this (format "unknown ast ~a" ast)))))))))
 
-(define (imp_eval_list this exps envs f . defaults)
-  (apply imp_eval_list_iter this exps envs f '() defaults))
+(define (imp-eval-list this exps envs f . defaults)
+  (apply imp-eval-list-iter this exps envs f '() defaults))
 
-(define (imp_eval_list_iter this exps envs f vs . defaults)
+(define (imp-eval-list-iter this exps envs f vs . defaults)
   (cond
     ((null? exps)
      (set-car! envs (upd! (car envs) ':result (lambda (old) (f (reverse vs))) 0))
      envs)
     (else
-     (let* ((envs (imp_eval this (car exps) envs))
+     (let* ((envs (imp-eval this (car exps) envs))
             (v (apply get (car envs) ':result defaults)))
-       (apply imp_eval_list_iter this (cdr exps) envs f (cons v vs) defaults)))))
+       (apply imp-eval-list-iter this (cdr exps) envs f (cons v vs) defaults)))))
 
 (define (program-of ast)
   (get (traverse! ast refresh-exp) ':exp))
