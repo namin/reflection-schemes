@@ -1,6 +1,7 @@
 (define (run process)
   (let ((env
          ((get process ':eval evl)
+          process
           (get process ':exp)
           (get process ':env))))
     (upd! process ':env (lambda (old) env))

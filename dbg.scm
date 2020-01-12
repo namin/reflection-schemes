@@ -1,5 +1,5 @@
 (define (tracer process)
-  `((:eval . ,(lambda (exp env)
+  `((:eval . ,(lambda (this exp env)
                 (let ((penv (get process ':env)))
                   (format #t "~a\n" penv)
                   (upd! env ':trace (lambda (ts) (cons (full-copy penv) ts)))

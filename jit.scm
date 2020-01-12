@@ -99,7 +99,7 @@
              ast)))))))
 
 (define (monitor optimize! process)
-  `((:eval . ,(lambda (exp env)
+  `((:eval . ,(lambda (this exp env)
               (if (get (get process ':env) ':done #f)
                   (upd! env ':done (lambda (old) #t))
                   ;; still optimize even if done...
