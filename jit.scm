@@ -4,6 +4,8 @@
 
 (define (counter-of context branch)
   (to-id ':hits (cons branch context)))
+(define (instrumented-if? process context)
+  (get (get process ':env) (counter-of context ':consequent) #f))
 (define (instrument! process)
   (define (gen ast context branch)
     (let ((id (counter-of context branch)))
@@ -81,17 +83,20 @@
       (traverse!
        (analyze program)
        (lambda (ast context)
-         (cond ((eq? ':if (get ast ':tag))
+         (if (instrumented-if? process context)
+             (cond
+               ((eq? ':if (get ast ':tag))
                 (analyze (optimize-if! #f process ast context)))
                ((and (eq? ':begin (get ast ':tag))
                      (eq? ':speculate (get (get (get ast ':children) '(:exp . 0)) ':tag))
                      (eq? ':if (get (get (get ast ':children) '(:exp . 1)) ':tag)))
                 (analyze (optimize-if!
-                          (if (eq? ':commit (get (get (get (get ast ':children) '(:exp . 1)) ':consequent) ':tag))
+                          (if (eq? ':commit (get (get (get (get (get ast ':children) '(:exp . 1)) ':children) ':consequent) ':tag))
                               ':consequent
                               ':alternative)
                           process ast context)))
-               (else ast))))))))
+               (else (error 'optimize! (format "unknown if shape"))))
+             ast)))))))
 
 (define (monitor optimize! process)
   `((:eval . ,(lambda (exp env)
@@ -100,5 +105,5 @@
                   (exp))
               env))
     (:exp . ,(lambda () (optimize! process)))
-    (:env . (:done #f))))
+    (:env . ((:done . #f)))))
 

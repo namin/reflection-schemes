@@ -68,3 +68,6 @@
                 lcar
                 (error 'lengths (format "inconsistent lengths ~a vs ~a" lcar lcdr)))
             lcar))))
+
+(define (repeat n thunk)
+  (map (lambda (i) (thunk)) (range 0 n)))

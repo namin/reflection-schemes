@@ -15,6 +15,11 @@
         2)))
 
 (eg
+ (let ((process '((:exp . (if #t 1 2)) (:env . ()))))
+   (get (instrument! process) ':env))
+ '((:hits:alternative . 0) (:hits:consequent . 0)))
+
+(eg
  (let ((process '((:exp . (if #t (if #f 1 2) 3)) (:env . ()))))
    (get (instrument! process) ':exp))
  '(if #t
