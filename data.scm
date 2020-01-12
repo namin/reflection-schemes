@@ -21,6 +21,12 @@
 (define (copy a)
   (map (lambda (kv) (cons (car kv) (cdr kv))) a))
 
+(define (full-copy x)
+  (cond
+    ((null? x) x)
+    ((pair? x) (cons (full-copy (car x)) (full-copy (cdr x))))
+    (else x)))
+
 (define (transfer! from to)
   (if (null? from)
       to
