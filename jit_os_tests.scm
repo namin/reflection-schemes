@@ -4,8 +4,8 @@
        begin
        (if (= n 0)
            (begin
-            (set! :hits:consequent:exp0 (+ :hits:consequent:exp0 1))
-            (set! :done #t))
+             (set! :hits:consequent:exp0 (+ :hits:consequent:exp0 1))
+             (set! :done #t))
            (begin
              (set! :hits:alternative:exp0 (+ :hits:alternative:exp0 1))
              (begin (set! result (* n result)) (set! n (- n 1)))))
@@ -45,8 +45,8 @@
        (begin
          (speculate
           (begin
-         (set! :hits:consequent:exp0 (+ :hits:consequent:exp0 1))
-         (set! :done #t)))
+            (set! :hits:consequent:exp0 (+ :hits:consequent:exp0 1))
+            (set! :done #t)))
          (if (= n 0)
              (commit)
              (begin
@@ -55,9 +55,11 @@
                  (set! :hits:alternative:exp0 (+ :hits:alternative:exp0 1))
                  (begin (set! result (* n result)) (set! n (- n 1)))))))
        result)
-      (:env (:done . #t) (:result . 720)
-            (:hits:alternative:exp0 . 6) (:hits:consequent:exp0 . 65)
-            (result . 720) (n . 0))))
+      (:env
+       (result . 720) (n . 0)
+       (:hits:consequent:exp0 . 65) (:hits:alternative:exp0 . 6)
+       (:result . 720) (:done . #t))
+      (:status . :terminated)))
 
   (define f6 (factorial_process 6))
   (define j6 (jit! f6))
@@ -72,11 +74,9 @@
 
   (eg (get f6 ':exp) (get f6_init ':exp))
   (eg (get f6 ':env)
-      '((:done . #t)
-        (:result . 720)
-        (:hits:alternative:exp0 . 5)
-        (:hits:consequent:exp0 . 1)
-        (result . 720) (n . 1)))
+      '((result . 720) (n . 1)
+        (:hits:consequent:exp0 . 1) (:hits:alternative:exp0 . 5)
+        (:result . 720) (:done . #t)))
 
   (repeat 5 (lambda () (run f6)))
   (run j6)

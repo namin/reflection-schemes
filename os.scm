@@ -2,7 +2,7 @@
   (call/cc
    (lambda (k)
      (let* ((jump (lambda (env) (upd! process ':env (lambda (old) env)) (k env)))
-            (process (upd! process ':suspend! (lambda (x) x) jump))
+            (process (cons (cons ':suspend! jump) process)) ;; don't make it eternal!
             (env
              ((get process ':eval evl)
               process
