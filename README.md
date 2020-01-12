@@ -43,6 +43,7 @@ in [Chez Scheme](http://cisco.github.io/ChezScheme/).
   - [ ] process tracer as a reflective program
   - [ ] ...
 - [ ] `lam`: high-level functional language
+  - [ ] compiler from `lam` to `imp`?
 - [ ] `mea`: instrumentation for `lam`
 - [ ] `mix`: mixing `imp` and `lam`
 - [ ] `tow`: reflective tower of interpreters
