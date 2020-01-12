@@ -1,6 +1,6 @@
 (define (jit! process)
   (instrument! process)
-  (monitor! optimize! process))
+  (monitor optimize! process))
 
 (define (counter-of context branch)
   (to-id ':hits (cons branch context)))
@@ -92,4 +92,13 @@
                               ':alternative)
                           process ast context)))
                (else ast))))))))
+
+(define (monitor optimize! process)
+  `((:eval . ,(lambda (exp env)
+              (if (get (get process ':env) ':done #f)
+                  (upd! env ':done (lambda (old) #t))
+                  (exp))
+              env))
+    (:exp . ,(lambda () (optimize! process)))
+    (:env . (:done #f))))
 

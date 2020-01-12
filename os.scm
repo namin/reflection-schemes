@@ -19,3 +19,8 @@
   (if (null? processes)
       'done
       (step* (step processes))))
+
+(define (step-list processes acc)
+  (if (null? processes)
+      (reverse acc)
+      (step-list (step processes) (cons processes acc))))

@@ -93,7 +93,16 @@
                (map (lambda (kv) (get (cdr kv) ':exp)) (get ast ':children)))))))
 
 (define (to-id prefix context)
-  (string->symbol (apply string-append (map symbol->string (cons prefix context)))))
+  (string->symbol
+   (apply
+    string-append
+    (map (lambda (x)
+           (if (symbol? x)
+               (symbol->string x)
+               (string-append
+                (symbol->string (car x))
+                (number->string (cdr x)))))
+         (cons prefix context)))))
 
 (define
   tags
