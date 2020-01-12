@@ -4,7 +4,9 @@
                   (format #t "~a\n" penv)
                   (upd! env ':trace (lambda (ts) (cons (full-copy penv) ts)))
                   (if (get (get process ':env) ':done #f)
-                      (upd! env ':done (lambda (old) #t))
+                      (begin
+                        (upd! env ':trace (lambda (ts) (reverse ts)))
+                        (upd! env ':done (lambda (old) #t)))
                       (run process)))
                 env))
     (:exp . ':none)
