@@ -2,7 +2,7 @@
 
 ;; interface
 (define (analyze program)
-  (add-ids (ast-of program)))
+  (ast-of program))
 
 (define (synthesize ast)
   (program-of ast))
@@ -22,14 +22,21 @@
            cs))) context)))
 
 
+(define (to-id prefix context)
+  (string->symbol (apply string-append (map symbol->string (cons prefix context)))))
 
 ;; implementation
-(define (to-id x) x)
-(define (add-ids ast)
-  (traverse!
-   ast
-   (lambda (ast context)
-     (upd! ast ':id (lambda (old) (if old old (to-id context))) #f))))
+(define (program-of ast)
+  (get (traverse! ast refresh-exp) ':exp))
+
+(define (refresh-exp ast context)
+  (if (null? (get ast ':children))
+      ast
+      (upd!
+       ast ':exp
+       (lambda (old)
+         (cons (reverse-tag-of (get ast ':tag))
+               (map (lambda (kv) (get (cdr kv) ':exp)) (get ast ':children)))))))
 
 (define
   tags
@@ -39,13 +46,15 @@
     (+ . :+)))
 (define
   tag-children
-  '((:if :conditional :consequent :alternative)
+  '((:if :condition :consequent :alternative)
     (:set! :variable :value)
     (:+ . :operand)
     (:begin . :exp)))
 
 (define (tag-of x)
   (get tags x))
+(define (reverse-tag-of x)
+  (get (map (lambda (kv) (cons (cdr kv) (car kv))) tags) x))
 
 (define (ast-of program)
   (cond

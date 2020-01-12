@@ -7,10 +7,6 @@
  '((:tag . :number) (:exp . 1) (:children)))
 
 (eg
- (get (get (get (get (get (analyze '(if #t (if #f 1 2) 3)) ':children) ':consequent) ':children) ':alternative) ':id)
- '(:alternative :consequent))
-
-(eg
  (ast-of '(+ 1 2))
  '((:tag . :+)
    (:exp + 1 2)
