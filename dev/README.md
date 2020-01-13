@@ -21,7 +21,8 @@ A reflective architecture that can support the following case studies:
   - `exp`
   - `env`
   - `context`
-  - `run`: `() -> ()`
+  - `run`: `process|os -> ()`
+  - `suspend`: `() -> ()`
   - `status`
 
 ### Closure `->`
@@ -39,6 +40,9 @@ A reflective architecture that can support the following case studies:
   - `queue`: a list of active processes
   - `step`: pop and run a process in the queue, re-queue if process is not done
   - `step*`: run `step` until queue is empty
+
+- Q: can the OS be just another process that can be inspected and
+  modified?
 
 ### Case Studies
 
@@ -67,6 +71,8 @@ A reflective architecture that can support the following case studies:
     - restore `this.exp`
     - set `this.env.obj.exp` to `this.exp` after `this.context`
     - unblock object process
+
+- Q: can `(reify)` and `(reflect)` be user-defined?
 
 ## Language
 
