@@ -88,3 +88,6 @@ A reflective architecture that can support the following case studies:
                  | (if e e e)              (conditional)
                  | (begin e ...)           (sequence)
                  | (run e)                 (run a process)
+
+- Q: could generalize to one form of application, covering primitives,
+  special forms, closures and processes.
