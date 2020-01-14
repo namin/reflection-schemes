@@ -1,6 +1,3 @@
-(define (runevl process)
-  (evl process (get process '(:exp)) (get process '(:context) '())))
-
 (define (factorial-process n)
   (dict `((:env . ,(dict `((n . ,n) (:result . 1))))
           (:exp
@@ -10,7 +7,7 @@
                (begin
                  (set! :result (* n :result))
                  (set! n (- n 1)))))
-          (:run . ,runevl))))
+          (:run . ,ev))))
 
 (eg
  (let ((f6 (factorial-process 6)))
@@ -33,9 +30,8 @@
                 (set! :result #f)
                 (set! :done #t))
               (begin
-                (set! n (- n 2))
-                (run self)))))
-     (:run . ,runevl))))
+                (set! n (- n 2))))))
+     (:run . ,ev))))
 
 (define (test-even? n)
   (let ((p (even?-process)))
@@ -50,30 +46,36 @@
 (eg (test-even? 2) #t)
 (eg (test-even? 3) #f)
 
-(define (parity?-process b)
+(define (parity?-process name b)
   (dict
-   `((:env . ,(dict '()))
+   `((:name . ,name)
+     (:env . ,(dict '()))
      (:exp
       .
-      (if (= n 0)
-          (begin
-            (set! :result ,b)
-            (set! :done #t))
-          (if (= n 1)
-              (begin
-                (set! :result (not ,b))
-                (set! :done #t))
-              (begin
-                (upd! other '(:env n) (- n 1))
-                (run other)
-                (set! :result (not (get other '(:env :result))))
-                (set! :done #t)))))
-     (:run . ,runevl))))
+      (begin
+        (if (= n 0)
+            (begin
+              (set! :result ,b))
+            (if (= n 1)
+                (begin
+                  (set! :result (not ,b)))
+                (begin
+                  (set! other (copy other))
+                  (upd! other '(:env self) other)
+                  (upd! other '(:env n) (- n 1))
+                  (upd! self '(:status) ':blocked)
+                  (upd! other '(:status) ':ready)
+                  (run other)
+                  (set! :result (get other '(:env :result))))))
+        (set! :done #t)))
+     (:run . ,ev))))
 
 (define (test-odd? n)
-  (let ((p0 (parity?-process #t))
-        (p1 (parity?-process #f)))
+  (let ((p0 (parity?-process 'even #t))
+        (p1 (parity?-process 'odd #f)))
     (upd! p1 '(:env n) n)
+    (upd! p0 '(:env self) p0)
+    (upd! p1 '(:env self) p1)
     (upd! p0 '(:env other) p1)
     (upd! p1 '(:env other) p0)
     (schedule p1)
@@ -82,5 +84,5 @@
 
 (eg (test-odd? 0) #f)
 (eg (test-odd? 1) #t)
-(eg_TODO (test-odd? 2) #f)
+(eg (test-odd? 2) #f)
 (eg_TODO (test-odd? 3) #t)

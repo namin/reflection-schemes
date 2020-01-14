@@ -92,6 +92,7 @@ A reflective architecture that can support the following case studies:
                  | (dict e)                (dictionary from association list)
                  | (get e selector [e])    (dictionary lookup)
                  | (upd! e selector e)     (dictionary update)
+                 | (copy e)                (dictionary copy)
                  | (quote e)               (quote)
                  | (if e e e)              (conditional)
                  | (begin e ...)           (sequence)
