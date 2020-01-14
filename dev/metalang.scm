@@ -13,8 +13,8 @@
           (apply orfun (cdr args)))))
 
 ;; meta-circular evaluator
-(define (meta-ev this)
-  (begin
+(define meta-ev-exp
+  '(begin
     (set! ctx (get this '(:ctx) '()))
     ;; Note: exp exists as an immutable variable in Chez Scheme?
     (set! e (navigate-context (reverse ctx) (get this '(:exp))))
@@ -142,3 +142,6 @@
           (upd! this '(:pending) '())
           (upd! this '(:env :result) result)
           (upd! this '(:env :done) #t)))))
+
+(define meta-ev
+  (eval `(lambda (this) ,meta-ev-exp)))
