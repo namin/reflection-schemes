@@ -3,3 +3,4 @@
 (load "lang.scm")
 (load "metalang.scm")
 (load "tower.scm")
+(load "metatower.scm")

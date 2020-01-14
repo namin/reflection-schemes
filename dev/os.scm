@@ -57,3 +57,9 @@
   (for-each schedule processes)
   (step*)
   (get (car processes) '(:env :result)))
+
+(define (debug-run* . processes)
+  (reset!)
+  (for-each schedule processes)
+  (step*)
+  (get (car processes) '(:env :result)))
