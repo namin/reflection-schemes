@@ -8,13 +8,17 @@
            (if (not (existsi _envs (+ _level 1)))
                (upd! this '(:envs) (append _envs (list (dict '())))))
            (upd! this '(:env) (geti (get this '(:envs)) (+ _level 1)))
-           (upd! this '(:level) (+ _level 1)))
+           (upd! this '(:level) (+ _level 1))
+           (set! _result (+ _level 1))
+           (set! _ctx _next-ctx))
          (if (tagged? 'reflect _e)
              (begin
                (if (<= _level 0)
                    (error 'tower-evl (format "reflect cannot go below zero levels")))
                (upd! this '(:env) (geti (get this '(:envs)) (- _level 1)))
-               (upd! this '(:level) (- _level 1)))
+               (upd! this '(:level) (- _level 1))
+               (set! _result (- _level 1))
+               (set! _ctx _next-ctx))
              (if (tagged? 'up _e)
                  (begin
                    (set! _x (geti _e 1))
@@ -23,7 +27,8 @@
                        (begin
                          (if (not (existsi _envs (+ _level 1)))
                              (error 'up (format "level ~a does not exists" (+ _level 1))))
-                         (get (geti _envs (+ _level 1)) (list x)))))
+                         (set! _result (get (geti _envs (+ _level 1)) (list x)))
+                         (set! _ctx _next-ctx))))
                  ,end)))))
 (define metatower-ev-exp
   (meta-ev-exp metatower-ev-cases))

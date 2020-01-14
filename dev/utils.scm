@@ -88,3 +88,17 @@
                 lcar
                 (error 'lengths (format "inconsistent lengths ~a vs ~a" lcar lcdr)))
             lcar))))
+
+(define (take n xs)
+  (if (= n 0)
+      '()
+      (if (null? xs)
+          (error 'take "not enough to take")
+          (cons (car xs) (take (- n 1) (cdr xs))))))
+
+(define (drop n xs)
+  (if (= n 0)
+      xs
+      (if (null? xs)
+          (error 'drop "not enough to drop")
+          (drop (- n 1) (cdr xs)))))
