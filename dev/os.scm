@@ -31,7 +31,7 @@
                  #t)
                 ((eq? ':blocked status)
                  #f)
-                (else 'step (format "unexpected status ~a" status)))))
+                (else (error 'step (format "unexpected status ~a" status))))))
         (cond
           ((eq? ':ready status)
            ((get process '(:run)) process)
