@@ -102,7 +102,7 @@
                         (if _seen?
                             (begin
                               (set! _pending (cons 'get (reverse (take (length (cdr _e)) _stack))))
-                              (set! _stack (drop (length (cdr e)) _stack))
+                              (set! _stack (drop (length (cdr _e)) _stack))
                               (set! _dict (geti _pending 1))
                               (set! _selector (geti _pending 2))
                               (if (existsi _e 3)
@@ -113,8 +113,8 @@
                         (if (tagged? 'upd! _e)
                             (if _seen?
                                 (begin
-                                  (set! _pending (cons 'upd! (reverse (take (length (cdr e)) _stack))))
-                                  (set! _stack (drop (length (cdr e)) _stack))
+                                  (set! _pending (cons 'upd! (reverse (take (length (cdr _e)) _stack))))
+                                  (set! _stack (drop (length (cdr _e)) _stack))
                                   (set! _dict (geti _pending 1))
                                   (set! _selector (geti _pending 2))
                                   (set! _val (geti _pending 3))

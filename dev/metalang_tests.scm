@@ -46,10 +46,9 @@
                             (set! :done #t))))
  2)
 
-(eg_TODO
+(eg
  (run* (metalang-process '(begin
-                            (set! d '(dict '()))
-                            (set! _seen? 1)
+                            (set! d (dict '()))
                             (upd! d '(:history) 2)
                             (set! :result (get d '(:history)))
                             (set! :done #t))))
