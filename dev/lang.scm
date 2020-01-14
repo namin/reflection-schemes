@@ -31,7 +31,8 @@
           (tagged? 'not exp)
           (tagged? 'cons exp)
           (tagged? 'car exp)
-          (tagged? 'cdr exp))
+          (tagged? 'cdr exp)
+          (tagged? 'dict exp))
          (apply
           (eval (car exp))
           (mapi (lambda (i e) (evli exp (+ 1 i))) (cdr exp))))
@@ -63,7 +64,7 @@
            (if not_in_skip?
                (begin
                  (upd! p '(:caller) this)
-                 (upd! this '(:context) (reverse ctx))
+                 ;;(upd! this '(:context) (reverse ctx))
                  (upd! p '(:status) ':ready)
                  (schedule p)
                  (suspend this)))))

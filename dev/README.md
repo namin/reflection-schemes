@@ -89,6 +89,7 @@ A reflective architecture that can support the following case studies:
                  | (+|-|*|=|<|not e ...)   (arithmetic + bool logic)
                  | (cons|car|cdr e ...)    (list operations)
                  | (set! x e)              (assignment)
+                 | (dict e)                (dictionary from association list)
                  | (get e selector [e])    (dictionary lookup)
                  | (upd! e selector e)     (dictionary update)
                  | (quote e)               (quote)

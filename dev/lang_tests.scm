@@ -19,7 +19,9 @@
  3)
 
 (eg
- (top-eval '(begin (run p) 3) (cons 'p (top-process 'p 1)))
+ (top-eval
+  '(begin
+     (set! d (dict '((a . 1) (b . 2))))
+     (upd! d '(a) 3)
+     (get d '(a))))
  3)
-
-(reset!)

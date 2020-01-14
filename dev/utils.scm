@@ -68,7 +68,15 @@
   (< i (length xs)))
 
 (define (mapi f . xss)
-  (apply map `(,f ,(range 0 (lengths xss)) . ,xss)))
+  ;;map is not deterministic!
+  ;;(apply map `(,f ,(range 0 (lengths xss)) . ,xss))
+  (let ((r '()))
+    (apply
+     for-each
+     `(,(lambda args (set! r (cons (apply f args) r)))
+       ,(range 0 (lengths xss))
+       . ,xss))
+    (reverse r)))
 
 (define (lengths xss)
   (if (null? xss)

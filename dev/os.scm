@@ -1,5 +1,5 @@
 (define scheduled '())
-(define back-to-os! (lambda () '()))
+(define back-to-os! (lambda () (error 'back-to-os! "called outside of step*")))
 
 (define (reset!)
   (set! scheduled '()))
@@ -52,7 +52,7 @@
 (define (step*)
   (call/cc
    (lambda (k)
-     (set! back-to-os (lambda (k) (k '())))
+     (set! back-to-os! (lambda () (k (step*))))
      (if (done?)
          'done
          (begin
