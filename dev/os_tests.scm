@@ -63,7 +63,7 @@
                 (begin
                   (set! :result (not ,b)))
                 (begin
-                  ;; mutual recursion works without copy
+                  (set! other (copy other))
                   (upd! other '(:env n) (- n 1))
                   (upd! other '(:resume) #f)
                   (set! :result (call other)))))
