@@ -21,9 +21,10 @@ A reflective architecture that can support the following case studies:
   - `exp`
   - `env`
   - `context`
-  - `run`: `process|os -> ()`
+  - `callee`
+  - `run`: `process -> ()`
   - `suspend`: `() -> ()`
-  - `status`
+  - `status`: flag managed by operating system (see below)
 
 ### Closure `->`
 
@@ -37,9 +38,16 @@ A reflective architecture that can support the following case studies:
 ### Operating System
 
 - API:
-  - `queue`: a list of active processes
-  - `step`: pop and run a process in the queue, re-queue if process is not done
-  - `step*`: run `step` until queue is empty
+  - status is one of `ready`, `running`, `blocked`, `terminated`
+  - `schedule`: `process -> ()`
+  - `suspend`: `process -> ()`
+     - suspend a running process
+     - the process is responsible for saving any context
+  - `step`: `() -> ()`
+     - pick a scheduled process, run it if ready, and re-schedule it if not done
+     - a process is done when `env.done` exists and is true
+  - `step*`: `() -> ()`
+    - run `step` until there are no active processes
 
 - Q: can the OS be just another process that can be inspected and
   modified?
@@ -77,8 +85,9 @@ A reflective architecture that can support the following case studies:
 ## Language
 
     expression e = x                       (variable)
+                 | #t | #f                 (boolean)
                  | n                       (number)
-                 | (+|-|* e ...)           (arithmetic)
+                 | (+|-|*|= e ...)         (arithmetic)
                  | (set! x e)              (assignment)
                  | (get e selector [e])    (dictionary lookup)
                  | (upd! e selector e)     (dictionary update)

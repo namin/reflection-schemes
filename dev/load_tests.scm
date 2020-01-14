@@ -5,3 +5,4 @@
   (load fn))
 
 (test_load "lang_tests.scm")
+(test_load "os_tests.scm")

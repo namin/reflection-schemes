@@ -3,12 +3,13 @@
     (evl this (geti exp i) (cons i ctx)))
   (cond ((symbol? exp)
          (get this `(:env ,exp)))
-        ((number? exp)
+        ((or (number? exp) (boolean? exp))
          exp)
         ((or
           (tagged? '+ exp)
           (tagged? '- exp)
-          (tagged? '* exp))
+          (tagged? '* exp)
+          (tagged? '= exp))
          (apply
           (eval (car exp))
           (mapi (lambda (i e) (evli exp (+ 1 i))) (cdr exp))))
@@ -39,6 +40,7 @@
          (let ((p (evli exp 1)))
            (upd! p '(:caller) this)
            (upd! this '(:context) ctx)
-           ((get p '(:run)))))
+           (schedule p)
+           (suspend this)))
         (else
          (error 'evl (format "unknown expression ~a" exp)))))

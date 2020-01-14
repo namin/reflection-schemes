@@ -1,7 +1,7 @@
 (define (top-process name exp . env)
   (dict `((:env . ,(dict env))
           (:exp . ,exp)
-          (:run . ,(lambda () (format #t "running ~a...\n" name))))))
+          (:run . ,(lambda (process) (format #t "running ~a...\n" name))))))
 
 (define (top-eval exp . env)
   (evl (apply top-process 'top exp env) exp '()))
@@ -22,3 +22,4 @@
  (top-eval '(begin (run p) 3) (cons 'p (top-process 'p 1)))
  3)
 
+(reset!)
