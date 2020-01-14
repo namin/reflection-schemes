@@ -12,7 +12,7 @@
  3)
 
 (eg
- (debug-run* (metaenvtower-process
+ (run* (metaenvtower-process
         '(begin
            (set! x 3)
            (set! :result x)
@@ -22,7 +22,7 @@
  3)
 
 (eg
- (debug-run* (metaenvtower-process
+ (run* (metaenvtower-process
         '(begin
            (set! x 3)
            (reify)
@@ -33,7 +33,7 @@
  3)
 
 (eg
- (debug-run* (metaenvtower-process
+ (run* (metaenvtower-process
         '(begin
            (set! x 3)
            (reify)
@@ -44,7 +44,7 @@
  4)
 
 (eg
- (debug-run* (metaenvtower-process
+ (run* (metaenvtower-process
         '(begin
            (set! x 3)
            (reify)
@@ -59,7 +59,7 @@
  5)
 
 (eg
- (debug-run* (metaenvtower-process
+ (run* (metaenvtower-process
         '(begin
            (set! x 3)
            (reify)
