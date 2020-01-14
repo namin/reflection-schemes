@@ -32,7 +32,7 @@
            (set! :done #t))))
  3)
 
-(eg_TODO
+(eg
  (debug-run* (metatower-process
         '(begin
            (set! x 3)
@@ -43,7 +43,7 @@
            (set! :done #t))))
  4)
 
-(eg_TODO
+(eg
  (debug-run* (metatower-process
         '(begin
            (set! x 3)
@@ -58,7 +58,7 @@
            (set! :done #t))))
  5)
 
-(eg_TODO
+(eg
  (debug-run* (metatower-process
         '(begin
            (set! x 3)

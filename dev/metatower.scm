@@ -27,7 +27,7 @@
                        (begin
                          (if (not (existsi _envs (+ _level 1)))
                              (error 'up (format "level ~a does not exists" (+ _level 1))))
-                         (set! _result (get (geti _envs (+ _level 1)) (list x)))
+                         (set! _result (get (geti _envs (+ _level 1)) (list _x)))
                          (set! _ctx _next-ctx))))
                  ,end)))))
 (define metatower-ev-exp
