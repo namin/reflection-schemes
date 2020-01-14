@@ -1,9 +1,12 @@
 (define (ev process)
-  (call/cc (lambda (k) (evl process (get process '(:exp)) k))))
+  (ev-open evl process))
 
-(define (evl this exp jump)
+(define (ev-open tie process)
+  (call/cc (lambda (k) (evl tie process (get process '(:exp)) k))))
+
+(define (evl evl this exp jump)
   (define (evli exp i)
-    (evl this (geti exp i) jump))
+    (evl evl this (geti exp i) jump))
   (cond ((symbol? exp)
          (get this `(:env ,exp)))
         ((or (number? exp) (boolean? exp))

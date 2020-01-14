@@ -68,6 +68,8 @@ A reflective architecture that can support the following case studies:
         - inspect `user.stats` in `env`
         - rewrite `user.exp` accordingly
 
+- Towers of environment
+
 - For towers of interpreters
   - at the beginning of the `run` of a process
     - set `this` to the self process

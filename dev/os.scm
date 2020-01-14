@@ -51,3 +51,9 @@
       (begin
         (step)
         (step*))))
+
+(define (run* . processes)
+  (reset!)
+  (for-each schedule processes)
+  (step*)
+  (get (car processes) '(:env :result)))
