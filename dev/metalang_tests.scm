@@ -26,3 +26,15 @@
 (eg
  (run* (metalang-process '(begin (set! x 1) (set! :result x) (set! :done #t))))
  1)
+
+(eg
+ (run* (metalang-process '(begin (set! d (dict '((:foo . :bar)))) (set! :result (get d '(:foo))) (set! :done #t))))
+ ':bar)
+
+(eg
+ (run* (metalang-process '(begin (set! d (dict '((:foo . :bar)))) (set! :result (get d '(:foo) ':miao)) (set! :done #t))))
+ ':bar)
+
+(eg
+ (run* (metalang-process '(begin (set! :result (get (dict '()) '(foo) 1)) (set! :done #t))))
+ 1)

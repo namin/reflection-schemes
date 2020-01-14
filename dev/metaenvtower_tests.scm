@@ -1,10 +1,10 @@
-(define (metatower-process exp)
+(define (metaenvtower-process exp)
   (dict `((:env . ,(dict '()))
           (:exp . ,exp)
-          (:run . ,metatower-ev))))
+          (:run . ,metaenvtower-ev))))
 
 (eg
- (run* (metatower-process
+ (run* (metaenvtower-process
         '(begin
            (set! x 3)
            (set! :result x)
@@ -12,38 +12,7 @@
  3)
 
 (eg
- (run* (metatower-process
-        '(begin
-           (set! :result 1)
-           (set! :done #t)
-           (reify)
-           (reflect))))
- 1)
-
-(eg_TODO
- (run* (metatower-process
-        '(begin
-           (reify)
-           (display "hello from meta")
-           (newline)
-           (reflect)
-           (display "hello from obj")
-           (newline)
-           (set! :result 1)
-           (set! :done #t))))
- 1)
-
-(eg_TODO
- (run* (metatower-process
-        '(begin
-           (reify)
-           (reflect)
-           (set! :result 1)
-           (set! :done #t))))
- 1)
-
-(eg_TODO
- (run* (metatower-process
+ (debug-run* (metaenvtower-process
         '(begin
            (set! x 3)
            (set! :result x)
@@ -52,8 +21,8 @@
            (set! :done #t))))
  3)
 
-(eg_TODO
- (run* (metatower-process
+(eg
+ (debug-run* (metaenvtower-process
         '(begin
            (set! x 3)
            (reify)
@@ -63,8 +32,8 @@
            (set! :done #t))))
  3)
 
-(eg_TODO
- (run* (metatower-process
+(eg
+ (debug-run* (metaenvtower-process
         '(begin
            (set! x 3)
            (reify)
@@ -74,8 +43,8 @@
            (set! :done #t))))
  4)
 
-(eg_TODO
- (run* (metatower-process
+(eg
+ (debug-run* (metaenvtower-process
         '(begin
            (set! x 3)
            (reify)
@@ -89,8 +58,8 @@
            (set! :done #t))))
  5)
 
-(eg_TODO
- (run* (metatower-process
+(eg
+ (debug-run* (metaenvtower-process
         '(begin
            (set! x 3)
            (reify)

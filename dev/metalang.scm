@@ -15,26 +15,27 @@
 ;; meta-circular evaluator
 (define (meta-ev-exp more-cases)
   `(begin
-    (set! _ctx (get this '(:ctx) '()))
-    (set! _e (navigate-context (reverse _ctx) (get this '(:exp))))
-    (set! _stack (get this '(:stack) '()))
-    (set! _history (get this '(:history) (dict '())))
-    (upd! this '(:history) _history)
+    (set! _this (get (this) '(:cur) (this)))
+    (set! _ctx (get _this '(:ctx) '()))
+    (set! _e (navigate-context (reverse _ctx) (get _this '(:exp))))
+    (set! _stack (get _this '(:stack) '()))
+    (set! _history (get _this '(:history) (dict '())))
+    (upd! _this '(:history) _history)
     (if (eq? _e ':none)
         (begin
           (set! _ctx (cdr _ctx))
-          (set! _e (navigate-context (reverse _ctx) (get this '(:exp))))))
+          (set! _e (navigate-context (reverse _ctx) (get _this '(:exp))))))
     (set!
      _next-ctx
      (if (null? _ctx)
          '()
          (cons (+ 1 (car _ctx)) (cdr _ctx))))
-    (set! _seen? (get this (list ':history _ctx) #f))
-    (upd! this (list ':history _ctx) (+ 1 (if _seen? _seen? 0)))
+    (set! _seen? (get _this (list ':history _ctx) #f))
+    (upd! _this (list ':history _ctx) (+ 1 (if _seen? _seen? 0)))
     (set! _result ':none)
     (if (symbol? _e)
         (begin
-          (set! _result (get this (list ':env _e)))
+          (set! _result (get _this (list ':env _e)))
           (set! _ctx _next-ctx))
         (if (orfun (number? _e) (boolean? _e) (string? _e))
             (begin
@@ -75,8 +76,8 @@
                  (tagged? 'format _e))
                 (if _seen?
                     (begin
-                      (set! _pending (reverse (take (length (cdr e)) _stack)))
-                      (set! _stack (drop (length (cdr e)) _stack))
+                      (set! _pending (reverse (take (length (cdr _e)) _stack)))
+                      (set! _stack (drop (length (cdr _e)) _stack))
                       (set! _result
                             (apply
                              (eval (car _e))
@@ -89,14 +90,14 @@
                           (set! _x (geti _e 1))
                           (set! _v (car _stack))
                           (set! _stack (cdr _stack))
-                          (upd! this (list ':env _x) _v)
+                          (upd! _this (list ':env _x) _v)
                           (set! _result _v)
                           (set! _ctx _next-ctx))
                         (set! _ctx (cons 2 _ctx)))
                     (if (tagged? 'get _e)
                         (if _seen?
                             (begin
-                              (set! _pending (cons 'get (reverse (take (length (cdr e)) _stack))))
+                              (set! _pending (cons 'get (reverse (take (length (cdr _e)) _stack))))
                               (set! _stack (drop (length (cdr e)) _stack))
                               (set! _dict (geti _pending 1))
                               (set! _selector (geti _pending 2))
@@ -110,9 +111,9 @@
                                 (begin
                                   (set! _pending (cons 'upd! (reverse (take (length (cdr e)) _stack))))
                                   (set! _stack (drop (length (cdr e)) _stack))
-                                  (set! _dict (geti _pending_rev 1))
-                                  (set! _selector (geti _pending_rev 2))
-                                  (set! _val (geti _pending_rev 3))
+                                  (set! _dict (geti _pending 1))
+                                  (set! _selector (geti _pending 2))
+                                  (set! _val (geti _pending 3))
                                   (upd! _dict _selector _val)
                                   (set! _ctx _next-ctx))
                                 (set! _ctx (cons 1 _ctx)))
@@ -143,12 +144,14 @@
                                             (set! _ctx (cons 1 _ctx)))
                                         (if (tagged? 'this _e)
                                             (begin
-                                              (set! _result this)
+                                              (set! _result _this)
                                               (set! _ctx _next-ctx))
                                             ,(more-cases '(error 'evl (format "unknown expression ~a" _e)))))))))))))
-    (upd! this '(:ctx) _ctx)
+    (upd! _this '(:ctx) _ctx)
     (if (not (eq? _result ':none))
-        (upd! this '(:stack) (cons _result _stack)))))
+        (upd! _this '(:stack) (cons _result _stack)))))
 
 (define meta-ev
-  (eval `(lambda (this) ,(meta-ev-exp (lambda (x) x)))))
+  (eval `(lambda (process)
+           (let ((this (lambda () process)))
+             ,(meta-ev-exp (lambda (x) x))))))

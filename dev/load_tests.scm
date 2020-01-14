@@ -8,4 +8,5 @@
 (test_load "os_tests.scm")
 (test_load "metalang_tests.scm")
 (test_load "tower_tests.scm")
+(test_load "metaenvtower_tests.scm")
 (test_load "metatower_tests.scm")
