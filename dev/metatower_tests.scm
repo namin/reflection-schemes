@@ -20,7 +20,7 @@
            (reflect))))
  1)
 
-(eg_TODO
+(eg
  (run* (metatower-process
         '(begin
            (reify)
@@ -33,7 +33,7 @@
            (set! :done #t))))
  1)
 
-(eg_TODO
+(eg
  (run* (metatower-process
         '(begin
            (reify)
@@ -42,7 +42,7 @@
            (set! :done #t))))
  1)
 
-(eg_TODO
+(eg
  (run* (metatower-process
         '(begin
            (set! x 3)

@@ -30,9 +30,7 @@
      (if (null? _ctx)
          '()
          (if (tagged? 'if (navigate-context (reverse (cdr _ctx)) (get _this '(:exp))))
-             (if (<= (car _ctx) 3)
-                 (cdr _ctx)
-                 (cons 4 (cdr _ctx)))
+             (cdr _ctx)
              (cons (+ 1 (car _ctx)) (cdr _ctx)))))
     (set! _seen? (get _this (list ':history _ctx) #f))
     (upd! _this (list ':history _ctx) (+ 1 (if _seen? _seen? 0)))
@@ -134,10 +132,13 @@
                                               (if _condition
                                                   (set! _ctx (cons 2 _ctx))
                                                   (set! _ctx (cons 3 _ctx))))
-                                            (begin
-                                              (set! _result (car _stack))
-                                              (set! _stack (cdr _stack))
-                                              (set! _ctx _next-ctx)))
+                                            (if (= 2 _seen?)
+                                                (begin
+                                                  (if (orfun _condition (= 4 (length _e)))
+                                                      (begin
+                                                        (set! _result (car _stack))
+                                                        (set! _stack (cdr _stack))))
+                                                  (set! _ctx (cdr _ctx)))))
                                         (set! _ctx (cons 1 _ctx)))
                                     (if (tagged? 'begin _e)
                                         (if  _seen?
@@ -148,7 +149,7 @@
                                             (set! _ctx (cons 1 _ctx)))
                                         (if (tagged? 'this _e)
                                             (begin
-                                              (set! _result _this)
+                                              (set! _result (this))
                                               (set! _ctx _next-ctx))
                                             ,(more-cases '(error 'evl (format "unknown expression ~a" _e)))))))))))))
     (upd! _this '(:ctx) _ctx)
