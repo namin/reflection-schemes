@@ -1,9 +1,9 @@
 (define (ev process)
-  (evl process (get process '(:exp))))
+  (call/cc (lambda (k) (evl process (get process '(:exp)) k))))
 
-(define (evl this exp)
+(define (evl this exp jump)
   (define (evli exp i)
-    (evl this (geti exp i)))
+    (evl this (geti exp i) jump))
   (cond ((symbol? exp)
          (get this `(:env ,exp)))
         ((or (number? exp) (boolean? exp))
@@ -19,7 +19,9 @@
           (tagged? 'car exp)
           (tagged? 'cdr exp)
           (tagged? 'dict exp)
-          (tagged? 'copy exp))
+          (tagged? 'copy exp)
+          (tagged? 'display exp)
+          (tagged? 'newline exp))
          (apply
           (eval (car exp))
           (mapi (lambda (i e) (evli exp (+ 1 i))) (cdr exp))))
@@ -50,6 +52,8 @@
          (let ((p (evli exp 1)))
            (upd! p '(:caller) this)
            (schedule p)
-           (suspend this)))
+           (call/cc (lambda (k) (jump (suspend this k))))))
+        ((tagged? 'this exp)
+         this)
         (else
          (error 'evl (format "unknown expression ~a" exp)))))

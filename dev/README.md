@@ -96,7 +96,9 @@ A reflective architecture that can support the following case studies:
                  | (quote e)               (quote)
                  | (if e e e)              (conditional)
                  | (begin e ...)           (sequence)
+                 | (display|newline e...)  (printing)
                  | (run e)                 (run a process)
+                 | (this)                  (read-only reference to the self process)
 
 - Q: could generalize to one form of application, covering primitives,
   special forms, closures and processes.
