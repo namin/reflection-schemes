@@ -23,7 +23,6 @@ A reflective architecture that can support the following case studies:
   - `context`
   - `callee`
   - `run`: `process -> ()`
-  - `suspend`: `() -> ()`
   - `status`: flag managed by operating system (see below)
 
 ### Closure `->`
@@ -87,7 +86,8 @@ A reflective architecture that can support the following case studies:
     expression e = x                       (variable)
                  | #t | #f                 (boolean)
                  | n                       (number)
-                 | (+|-|*|= e ...)         (arithmetic)
+                 | (+|-|*|=|<|not e ...)   (arithmetic + bool logic)
+                 | (cons|car|cdr e ...)    (list operations)
                  | (set! x e)              (assignment)
                  | (get e selector [e])    (dictionary lookup)
                  | (upd! e selector e)     (dictionary update)

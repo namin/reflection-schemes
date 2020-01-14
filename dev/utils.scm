@@ -6,6 +6,8 @@
       kvs)
     d))
 
+(define copy hashtable-copy)
+
 (define (get d ks . defaults)
   (if (null? defaults)
       (get-nd d ks)

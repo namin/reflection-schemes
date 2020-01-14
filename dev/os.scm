@@ -1,4 +1,5 @@
 (define scheduled '())
+(define back-to-os! (lambda () '()))
 
 (define (reset!)
   (set! scheduled '()))
@@ -15,7 +16,8 @@
   (null? scheduled))
 
 (define (suspend process)
-  'TODO)
+  (get process '(:status) ':blocked)
+  (back-to-os!))
 
 (define (step)
   (if (done?)
@@ -34,18 +36,25 @@
           ((eq? ':ready status)
            ((get process '(:run)) process)
            (if (get process '(:env :done) #f)
-               (upd! process '(:status) ':terminated)
+               (begin
+                 (upd! process '(:status) ':terminated)
+                 (let ((caller (get process '(:caller) #f)))
+                   (if caller
+                       (upd! caller '(:status) ':ready))))
                (begin
                  (if (eq? ':running (get process '(:status)))
                      (upd! process '(:status) ':ready))
                  (schedule process))))
-          ((eq? :blocked status)
+          ((eq? ':blocked status)
            (schedule process))
           (else (error 'step (format "unexpected status ~a" status)))))))
 
 (define (step*)
-  (if (done?)
-      'done
-      (begin
-        (step)
-        (step*))))
+  (call/cc
+   (lambda (k)
+     (set! back-to-os (lambda (k) (k '())))
+     (if (done?)
+         'done
+         (begin
+           (step)
+           (step*))))))
