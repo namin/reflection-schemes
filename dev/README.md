@@ -39,14 +39,16 @@ A reflective architecture that can support the following case studies:
 - API:
   - status is one of `ready`, `running`, `blocked`, `terminated`
   - `schedule`: `process -> ()`
-  - `suspend`: `process -> ()`
+  - `suspend`: `process, thunk -> ()`
      - suspend a running process
-     - the process is responsible for saving any context
+     - the thunk is saved in the process as `resume`
+     - `(resume)` is called instead of `(run process)` when set and not `#f`
   - `step`: `() -> ()`
      - pick a scheduled process, run it if ready, and re-schedule it if not done
      - a process is done when `env.done` exists and is true
   - `step*`: `() -> ()`
-    - run `step` until there are no active processes
+    - run `step` until there are no scheduled processes
+  - `pick!`: destructively pick a process from the scheduled process
 
 - Q: can the OS be just another process that can be inspected and
   modified?
