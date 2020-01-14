@@ -18,12 +18,16 @@ A reflective architecture that can support the following case studies:
 ### Process
 
 - API:
-  - `exp`
-  - `env`
-  - `context`
-  - `callee`
   - `run`: `process -> ()`
-  - `status`: flag managed by operating system (see below)
+  - `exp`: `run`-specific
+  - `env`: `dictionary`
+  - `caller`: `option[process]`
+  - `resume`: `option[() -> ()]`
+  - `status`: status in operating system
+     - `ready`
+     - `running`
+     - `blocked`
+     - `terminated`
 
 ### Closure `->`
 
@@ -37,7 +41,6 @@ A reflective architecture that can support the following case studies:
 ### Operating System
 
 - API:
-  - status is one of `ready`, `running`, `blocked`, `terminated`
   - `schedule`: `process -> ()`
   - `suspend`: `process, thunk -> ()`
      - suspend a running process
@@ -58,12 +61,12 @@ A reflective architecture that can support the following case studies:
 - JIT
   - given an object process `user`,
   - `jit(user)`: `process -> process`
-    - `instrument(user)`: `process -> process`
-       - change `user.env` to add `stats`
-       - change `user.exp` to update `stats`
-    - `optimize(user)`: `process -> process`
-       - inspect `user.stats` in `env`
-       - rewrite `user.exp` accordingly
+     - `instrument(user)`: `process -> process`
+        - change `user.env` to add `stats`
+        - change `user.exp` to update `stats`
+     - `optimize(user)`: `process -> process`
+        - inspect `user.stats` in `env`
+        - rewrite `user.exp` accordingly
 
 - For towers of interpreters
   - at the beginning of the `run` of a process
