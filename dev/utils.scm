@@ -59,7 +59,7 @@
 (define (geti xs i)
   (cond
     ((null? xs)
-     (error 'geti "index ~a not found ~a" i xs))
+     (error 'geti (format "index ~a not found ~a" i xs)))
     ((= i 0)
      (car xs))
     (else (geti (cdr xs) (- i 1)))))

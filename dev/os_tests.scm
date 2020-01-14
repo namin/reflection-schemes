@@ -32,11 +32,9 @@
               (begin
                 (set! n (- n 2))
                 ;; for tail-recursive, we can just stop here
-                ;; but let us use some stack
-                (set! this-copy (copy (this)))
-                (upd! (this) '(:status) ':blocked)
-                (upd! this-copy '(:status) ':ready)
-                (run this-copy)))))
+                ;; but if we want to spawn, we must copy
+                ;; otherwise, the statuses will clash
+                (call (copy (this)))))))
      (:run . ,ev))))
 
 (define (test-even? n)
@@ -67,11 +65,8 @@
                 (begin
                   ;; mutual recursion works without copy
                   (upd! other '(:env n) (- n 1))
-                  (upd! (this) '(:status) ':blocked)
-                  (upd! other '(:status) ':ready)
                   (upd! other '(:resume) #f)
-                  (run other)
-                  (set! :result (get other '(:env :result))))))
+                  (set! :result (call other)))))
         (set! :done #t)))
      (:run . ,ev))))
 
