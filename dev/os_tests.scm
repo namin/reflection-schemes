@@ -34,7 +34,9 @@
                 ;; for tail-recursive, we can just stop here
                 ;; but if we want to spawn, we must copy
                 ;; otherwise, the statuses will clash
-                (call (copy (this)))))))
+                (set! this-copy (copy (this)))
+                (run this-copy)
+                (set! :result (get this-copy '(:env :result)))))))
      (:run . ,ev))))
 
 (define (test-even? n)
@@ -66,7 +68,8 @@
                   (set! other (copy other))
                   (upd! other '(:env n) (- n 1))
                   (upd! other '(:resume) #f)
-                  (set! :result (call other)))))
+                  (run other)
+                  (set! :result (get other '(:env :result))))))
         (set! :done #t)))
      (:run . ,ev))))
 
