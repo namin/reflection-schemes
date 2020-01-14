@@ -4,11 +4,11 @@
           (:run . ,metatower-ev))))
 
 (eg
- (debug-run* (metatower-process 1))
+ (run* (metatower-process 1))
  1)
 
-(eg_TODO
- (debug-run* (metatower-process
+(eg
+ (run* (metatower-process
         '(begin
            (set! x 3)
            (set! :result x)
