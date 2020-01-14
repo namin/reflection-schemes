@@ -29,7 +29,11 @@
      _next-ctx
      (if (null? _ctx)
          '()
-         (cons (+ 1 (car _ctx)) (cdr _ctx))))
+         (if (tagged? 'if (navigate-context (reverse (cdr _ctx)) (get _this '(:exp))))
+             (if (<= (car _ctx) 3)
+                 (cdr _ctx)
+                 (cons 4 (cdr _ctx)))
+             (cons (+ 1 (car _ctx)) (cdr _ctx)))))
     (set! _seen? (get _this (list ':history _ctx) #f))
     (upd! _this (list ':history _ctx) (+ 1 (if _seen? _seen? 0)))
     (set! _result ':none)
@@ -126,8 +130,8 @@
                                         (if (= 1 _seen?)
                                             (begin
                                               (set! _condition (car _stack))
-                                              (set! _stack (cdr stack))
-                                              (if (_condition)
+                                              (set! _stack (cdr _stack))
+                                              (if _condition
                                                   (set! _ctx (cons 2 _ctx))
                                                   (set! _ctx (cons 3 _ctx))))
                                             (begin

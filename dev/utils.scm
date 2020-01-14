@@ -56,13 +56,16 @@
       (cons a (range (+ a 1) b))
       '()))
 
-(define (geti xs i)
+(define (geti xs i . initial)
+  (set! initial (if (null? initial)
+                    (list xs i)
+                    (car initial)))
   (cond
     ((null? xs)
-     (error 'geti (format "index ~a not found ~a" i xs)))
+     (error 'geti (format "index ~a not found ~a, initially ~a" i xs initial)))
     ((= i 0)
      (car xs))
-    (else (geti (cdr xs) (- i 1)))))
+    (else (geti (cdr xs) (- i 1) initial))))
 
 (define (existsi xs i)
   (< i (length xs)))
