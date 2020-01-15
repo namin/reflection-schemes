@@ -24,6 +24,17 @@
  (run* (metatower-process
         '(begin
            (reify)
+           2
+           (reflect)
+           (newline)
+           (set! :result 1)
+           (set! :done #t))))
+ 1)
+
+(eg
+ (run* (metatower-process
+        '(begin
+           (reify)
            (display "hello from meta")
            (newline)
            (reflect)

@@ -15,8 +15,7 @@
 ;; meta-circular evaluator
 (define (meta-ev-exp more-cases)
   `(begin
-    (set! _this (get (global) '(:this :obj) (get (global) '(:this))))
-    (upd! _this '(:meta) (get _this '(:meta) _this))
+    (set! _this (get process '(:env :this) process))
     (set! _ctx (get _this '(:ctx) '()))
     (set! _e (navigate-context (reverse _ctx) (get _this '(:exp))))
     (set! _stack (get _this '(:stack) '()))
@@ -38,7 +37,7 @@
     (set! _result ':none)
     (if (symbol? _e)
         (begin
-          (set! _result (get _this (list ':meta ':env _e)))
+          (set! _result (get _this (list ':env _e)))
           (set! _ctx _next-ctx))
         (if (orfun (number? _e) (boolean? _e) (string? _e))
             (begin
@@ -93,7 +92,7 @@
                           (set! _x (geti _e 1))
                           (set! _v (car _stack))
                           (set! _stack (cdr _stack))
-                          (upd! _this (list ':meta ':env _x) _v)
+                          (upd! _this (list ':env _x) _v)
                           (set! _result _v)
                           (set! _ctx _next-ctx))
                         (set! _ctx (cons 2 _ctx)))
@@ -148,11 +147,7 @@
                                               (set! _stack (cdr _stack))
                                               (set! _ctx _next-ctx))
                                             (set! _ctx (cons 1 _ctx)))
-                                        (if (tagged? 'global _e)
-                                            (begin
-                                              (set! _result (global))
-                                              (set! _ctx _next-ctx))
-                                            ,(more-cases '(error 'evl (format "unknown expression ~a" _e)))))))))))))
+                                        ,(more-cases '(error 'evl (format "unknown expression ~a" _e))))))))))))
     (if (not (eq? _ctx ':none))
         (upd! _this '(:ctx) _ctx))
     (if (not (eq? _result ':none))
@@ -161,10 +156,11 @@
 (define (meta-setup blurb)
   (eval
    `(lambda (process)
-      (let* ((_global (get process '(:global) (dict '())))
-             (_ (upd! process '(:global) _global))
-             (_ (upd! process '(:global :this) (get process '(:global :this) process)))
-             (global (lambda () (get process '(:global)))))
+      (begin
+        (set! process (get process '(:env process) process))
+        ;;(upd! process '(:env :this) process)
+        (upd! process '(:env process) process)
         ,blurb))))
 
 (define meta-ev (meta-setup (meta-ev-exp (lambda (x) x))))
+>
