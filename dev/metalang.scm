@@ -156,11 +156,7 @@
 (define (meta-setup blurb)
   (eval
    `(lambda (process)
-      (begin
-        (set! process (get process '(:env process) process))
-        ;;(upd! process '(:env :this) process)
-        (upd! process '(:env process) process)
-        ,blurb))))
+      ,blurb)))
 
 (define meta-ev (meta-setup (meta-ev-exp (lambda (x) x))))
->
+
