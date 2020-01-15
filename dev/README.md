@@ -16,6 +16,6 @@ exploration of reflective architectures in Scheme
 
 ### `os`
 
-- `schedule`: `thunk -> process`
-- `step`: `() -> ()`
+- `schedule`: `process -> ()`
+- `wait`: `process, process -> ()`
 - `step*`: `() -> ()`
