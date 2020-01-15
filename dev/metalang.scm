@@ -158,10 +158,13 @@
     (if (not (eq? _result ':none))
         (upd! _this '(:stack) (cons _result _stack)))))
 
-(define meta-ev
-  (eval `(lambda (process)
-           (let* ((_global (get process '(:global) (dict '())))
-                  (_ (upd! process '(:global) _global))
-                  (_ (upd! process '(:global :this) (get process '(:global :this) process)))
-                  (global (lambda () (get process '(:global)))))
-             ,(meta-ev-exp (lambda (x) x))))))
+(define (meta-setup blurb)
+  (eval
+   `(lambda (process)
+      (let* ((_global (get process '(:global) (dict '())))
+             (_ (upd! process '(:global) _global))
+             (_ (upd! process '(:global :this) (get process '(:global :this) process)))
+             (global (lambda () (get process '(:global)))))
+        ,blurb))))
+
+(define meta-ev (meta-setup (meta-ev-exp (lambda (x) x))))

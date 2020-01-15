@@ -59,10 +59,4 @@
                  ,end)))))
 (define metatower-ev-exp
   (meta-ev-exp metatower-ev-cases))
-(define metatower-ev
-  (eval `(lambda (process)
-           (let* ((_global (get process '(:global) (dict '())))
-                  (_ (upd! process '(:global) _global))
-                  (_ (upd! process '(:global :this) (get process '(:global :this) process)))
-                  (global (lambda () (get process '(:global)))))
-             ,metatower-ev-exp))))
+(define metatower-ev (meta-setup metatower-ev-exp))
