@@ -70,21 +70,7 @@ A reflective architecture that can support the following case studies:
 
 - Towers of environment
 
-- For towers of interpreters
-  - at the beginning of the `run` of a process
-    - set `this` to the self process
-    - set `this.meta` to the meta process
-  - `(reify)`:
-    - save `this.meta.exp`
-    - set `this.meta.exp` to `this.exp` after `this.context`
-    - set `this.meta.env.exp` to `this.exp`
-    - set `this.meta.env.env` to `this.env`
-    - set `this.meta.env.obj` to `this`
-    - suspend object process during previous call
-  - `(reflect)` -- `this` is old `this.meta`
-    - restore `this.exp`
-    - set `this.env.obj.exp` to `this.exp` after `this.context`
-    - unblock object process
+- Towers of interpreters
 
 - Q: can `(reify)` and `(reflect)` be user-defined?
 

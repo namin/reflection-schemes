@@ -3,7 +3,7 @@
           (:exp . ,exp)
           (:run . ,metatower-ev))))
 
-(eg
+(eg_TODO
  (run* (metatower-process
         '(begin
            (set! x 3)
@@ -11,7 +11,7 @@
            (set! :done #t))))
  3)
 
-(eg
+(eg_TODO
  (run* (metatower-process
         '(begin
            (set! :result 1)
@@ -20,7 +20,7 @@
            (reflect))))
  1)
 
-(eg
+(eg_TODO
  (run* (metatower-process
         '(begin
            (reify)
@@ -31,7 +31,7 @@
            (set! :done #t))))
  1)
 
-(eg
+(eg_TODO
  (run* (metatower-process
         '(begin
            (reify)
@@ -44,7 +44,7 @@
            (set! :done #t))))
  1)
 
-(eg
+(eg_TODO
  (run* (metatower-process
         '(begin
            (reify)
@@ -53,7 +53,7 @@
            (set! :done #t))))
  1)
 
-(eg
+(eg_TODO
  (run* (metatower-process
         '(begin
            (set! x 3)
@@ -63,7 +63,7 @@
            (set! :done #t))))
  3)
 
-(eg
+(eg_TODO
  (run* (metatower-process
         '(begin
            (set! x 3)
@@ -74,7 +74,7 @@
            (set! :done #t))))
  3)
 
-(eg
+(eg_TODO
  (run* (metatower-process
         '(begin
            (set! x 3)
