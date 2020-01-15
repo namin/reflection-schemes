@@ -13,6 +13,11 @@ A reflective architecture that can support the following case studies:
   interpreters, where each level can be reified into the meta level
   and reflected back into the object level.
 
+## Status
+
+- Abandoned because the loopy calling convention makes it difficult to
+  build a tower of interpreters.
+
 ## Design
 
 ### Process
