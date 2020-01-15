@@ -21,6 +21,7 @@
           (tagged? 'cons exp)
           (tagged? 'car exp)
           (tagged? 'cdr exp)
+          (tagged? 'null? exp)
           (tagged? 'dict exp)
           (tagged? 'copy exp)
           (tagged? 'display exp)

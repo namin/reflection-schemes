@@ -88,3 +88,27 @@
 (eg (test-odd? 2) #f)
 (eg (test-odd? 3) #t)
 (eg (test-odd? 4) #f)
+
+(define (rec-factorial-process n)
+  (dict `((:env . ,(dict `((n . ,n) (stack . (1)))))
+          (:exp
+           .
+           (if (= n 0)
+               (if (null? (cdr stack))
+                   (begin
+                     (set! :result (car stack))
+                     (set! :done #t))
+                   (set! stack
+                         (cons (* (car stack) (car (cdr stack)))
+                               (cdr (cdr stack)))))
+               (begin
+                 (set! stack (cons n stack))
+                 (set! n (- n 1)))))
+          (:run . ,ev))))
+
+(eg
+ (let ((f6 (rec-factorial-process 6)))
+   (schedule f6)
+   (step*)
+   (get f6 '(:env :result)))
+ 720)

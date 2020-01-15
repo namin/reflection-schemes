@@ -90,22 +90,22 @@ A reflective architecture that can support the following case studies:
 
 ## Language
 
-    expression e = x                       (variable)
-                 | #t | #f                 (boolean)
-                 | n                       (number)
-                 | (+|-|*|=|<|not e ...)   (arithmetic + bool logic)
-                 | (cons|car|cdr e ...)    (list operations)
-                 | (set! x e)              (assignment)
-                 | (dict e)                (dictionary from association list)
-                 | (get e selector [e])    (dictionary lookup)
-                 | (upd! e selector e)     (dictionary update)
-                 | (copy e)                (dictionary copy)
-                 | (quote e)               (quote)
-                 | (if e e e)              (conditional)
-                 | (begin e ...)           (sequence)
-                 | (display|newline e...)  (printing)
-                 | (run e)                 (run a process)
-                 | (this)                  (read-only reference to the self process)
+    expression e = x                          (variable)
+                 | #t | #f                    (boolean)
+                 | n                          (number)
+                 | (+|-|*|=|<|not e ...)      (arithmetic + bool logic)
+                 | (cons|car|cdr|null? e ...) (list operations)
+                 | (set! x e)                 (assignment)
+                 | (dict e)                   (dictionary from association list)
+                 | (get e selector [e])       (dictionary lookup)
+                 | (upd! e selector e)        (dictionary update)
+                 | (copy e)                   (dictionary copy)
+                 | (quote e)                  (quote)
+                 | (if e e e)                 (conditional)
+                 | (begin e ...)              (sequence)
+                 | (display|newline e...)     (printing)
+                 | (run e)                    (run a process)
+                 | (this)                     (read-only reference to the self process)
 
 - Q: could generalize to one form of application, covering primitives,
   special forms, closures and processes.
