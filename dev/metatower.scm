@@ -2,12 +2,12 @@
   `(begin
      (if (tagged? 'reify _e)
          (begin
-           (upd! (global) '(:metas) (get (global) '(:metas) '()))
+           (upd! (global) '(:metas) (get (global) '(:metas) (list _this)))
            (upd! (global) '(:level) (get (global) '(:level) 0))
            (set! _level (+ 1 (get (global) '(:level))))
            (set! _meta
                  (if (existsi (get (global) '(:metas)) _level)
-                     (geti (reverse (global) '(:metas)) _level)
+                     (geti (reverse (get (global) '(:metas))) _level)
                      #f))
            (if (not _meta)
                (begin
@@ -39,16 +39,21 @@
                (set! _ctx (get _this '(:ctx)))
                (set! _ctx _next-ctx)
                (set! _stack (get _this '(:stack)))
-               (set! _result ':reflect))
+               (set! _result ':reflect)
+               (display (get (global) '(:metas))) (newline))
              (if (tagged? 'up _e)
                  (begin
                    (set! _x (geti _e 1))
                    (if (not (symbol? _x))
                        (error 'up (format "up takes a variable, not ~a" _x))
                        (begin
-                         (set! _meta (get _this '(:meta) #f))
+                         (set! _level (+ 1 (get (global) '(:level))))
+                         (set! _meta
+                               (if (existsi (get (global) '(:metas)) _level)
+                                   (geti (reverse (get (global) '(:metas))) _level)
+                                   #f))
                          (if (not _meta)
-                             (error 'up (format "level ~a does not exists" (+ _level 1))))
+                             (error 'up (format "level ~a does not exists" _level)))
                          (set! _result (get _meta (list ':env _x)))
                          (set! _ctx _next-ctx))))
                  ,end)))))

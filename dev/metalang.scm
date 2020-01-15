@@ -38,7 +38,7 @@
     (set! _result ':none)
     (if (symbol? _e)
         (begin
-          (set! _result (get _this (list ':env _e)))
+          (set! _result (get _this (list ':meta ':env _e)))
           (set! _ctx _next-ctx))
         (if (orfun (number? _e) (boolean? _e) (string? _e))
             (begin

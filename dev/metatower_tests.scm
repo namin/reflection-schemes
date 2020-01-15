@@ -74,7 +74,7 @@
            (set! :done #t))))
  4)
 
-(eg_TODO
+(eg
  (run* (metatower-process
         '(begin
            (set! x 3)
