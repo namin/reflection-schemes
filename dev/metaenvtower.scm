@@ -34,5 +34,8 @@
   (meta-ev-exp metaenvtower-ev-cases))
 (define metaenvtower-ev
   (eval `(lambda (process)
-           (let ((this (lambda () process)))
-             ,metaenvtower-ev-exp (lambda (x) x)))))
+           (let* ((_global (get process '(:global) (dict '())))
+                  (_ (upd! process '(:global) _global))
+                  (_ (upd! process '(:global :this) (get process '(:global :this) process)))
+                  (global (lambda () (get process '(:global)))))
+             ,metaenvtower-ev-exp))))

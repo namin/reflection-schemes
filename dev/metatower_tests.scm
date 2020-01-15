@@ -52,7 +52,7 @@
            (set! :done #t))))
  3)
 
-(eg_TODO
+(eg
  (run* (metatower-process
         '(begin
            (set! x 3)
@@ -63,7 +63,7 @@
            (set! :done #t))))
  3)
 
-(eg_TODO
+(eg
  (run* (metatower-process
         '(begin
            (set! x 3)

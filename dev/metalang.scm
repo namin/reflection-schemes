@@ -15,7 +15,8 @@
 ;; meta-circular evaluator
 (define (meta-ev-exp more-cases)
   `(begin
-    (set! _this (get (this) '(:cur) (this)))
+    (set! _this (get (global) '(:this :obj) (get (global) '(:this))))
+    (upd! _this '(:meta) (get _this '(:meta) _this))
     (set! _ctx (get _this '(:ctx) '()))
     (set! _e (navigate-context (reverse _ctx) (get _this '(:exp))))
     (set! _stack (get _this '(:stack) '()))
@@ -92,7 +93,7 @@
                           (set! _x (geti _e 1))
                           (set! _v (car _stack))
                           (set! _stack (cdr _stack))
-                          (upd! _this (list ':env _x) _v)
+                          (upd! _this (list ':meta ':env _x) _v)
                           (set! _result _v)
                           (set! _ctx _next-ctx))
                         (set! _ctx (cons 2 _ctx)))
@@ -147,16 +148,20 @@
                                               (set! _stack (cdr _stack))
                                               (set! _ctx _next-ctx))
                                             (set! _ctx (cons 1 _ctx)))
-                                        (if (tagged? 'this _e)
+                                        (if (tagged? 'global _e)
                                             (begin
-                                              (set! _result (this))
+                                              (set! _result (global))
                                               (set! _ctx _next-ctx))
                                             ,(more-cases '(error 'evl (format "unknown expression ~a" _e)))))))))))))
-    (upd! _this '(:ctx) _ctx)
+    (if (not (eq? _ctx ':none))
+        (upd! _this '(:ctx) _ctx))
     (if (not (eq? _result ':none))
         (upd! _this '(:stack) (cons _result _stack)))))
 
 (define meta-ev
   (eval `(lambda (process)
-           (let ((this (lambda () process)))
+           (let* ((_global (get process '(:global) (dict '())))
+                  (_ (upd! process '(:global) _global))
+                  (_ (upd! process '(:global :this) (get process '(:global :this) process)))
+                  (global (lambda () (get process '(:global)))))
              ,(meta-ev-exp (lambda (x) x))))))
