@@ -76,3 +76,33 @@
   (eg (fib 5) 5))
 
 (test-fib (fib-0))
+
+(define (driver f)
+  (let ((env (mk-env '())))
+    (lambda args
+      (let* ((this (mk-process
+                    (lambda (process) (upd! env ':result (apply f args)))))
+             (super (get env 'this #f)))
+        (upd! env 'this this)
+        (schedule this)
+        (if super
+            (begin
+              (wait super this)
+              (upd! env 'this super)))
+        (step*)
+        (get env ':result)))))
+
+
+(define (fib-1)
+  (define
+    fib
+    (driver
+     (lambda (n)
+       (if (<= n 1)
+           n
+           (+ (fib (- n 1))
+              (fib (- n 2)))))))
+
+  fib)
+
+(test-fib (fib-1))
