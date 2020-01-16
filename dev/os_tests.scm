@@ -77,7 +77,7 @@
 
 (test-fib (fib-0))
 
-(define (driver f)
+(define (driver top f)
   (let ((env (mk-env '())))
     (lambda args
       (let* ((this (mk-process
@@ -88,21 +88,25 @@
         (if super
             (begin
               (wait super this)
-              (upd! env 'this super)))
-        (step*)
+              (upd! env 'this super))
+            (wait top this))
         (get env ':result)))))
 
-
 (define (fib-1)
+  (define top (mk-process (lambda (process) 'done)))
   (define
     fib
-    (driver
+    (driver top
      (lambda (n)
        (if (<= n 1)
            n
            (+ (fib (- n 1))
               (fib (- n 2)))))))
 
-  fib)
+  (lambda (n)
+    (let ((result (fib n)))
+      (schedule top)
+      (step*)
+      result)))
 
 (test-fib (fib-1))
