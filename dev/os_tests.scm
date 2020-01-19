@@ -81,7 +81,7 @@
   (let ((env (mk-env '())))
     (lambda args
       (let* ((this (mk-process
-                    (lambda (process) (upd! env ':result (apply f args)))))
+                    (lambda (process) (upd! env 'result (apply f args)))))
              (super (get env 'this #f)))
         (upd! env 'this this)
         (schedule this)
@@ -90,7 +90,7 @@
               (wait super this)
               (upd! env 'this super))
             (wait top this))
-        (get env ':result)))))
+        (get env 'result)))))
 
 (define (fib-1)
   (define top (mk-process (lambda (process) 'done)))
@@ -110,3 +110,42 @@
       result)))
 
 (test-fib (fib-1))
+
+(define (driver-process top f)
+  (let ((env (mk-env '())))
+    (lambda args
+      (let* ((this (mk-process
+                    (lambda (process) (upd! env 'result (apply f args)))))
+             (super (get env 'this #f)))
+        (upd! this 'env env)
+        (upd! env 'this this)
+        (schedule this)
+        (if super
+            (begin
+              (wait super this)
+              (upd! env 'this super))
+            (wait top this))
+        this))))
+
+(define (call f . args)
+  (let ((this (apply f args)))
+    (gets this '(env result))))
+
+(define (fib-2)
+  (define top (mk-process (lambda (process) 'done)))
+  (define
+    fib
+    (driver-process top
+     (lambda (n)
+       (if (<= n 1)
+           n
+           (+ (call fib (- n 1))
+              (call fib (- n 2)))))))
+
+  (lambda (n)
+    (let ((result (call fib n)))
+      (schedule top)
+      (step*)
+      result)))
+
+(test-fib (fib-2))
