@@ -131,6 +131,16 @@
   (let ((this (apply f args)))
     (gets this '(env result))))
 
+(define (trace-process name f)
+  (let ((indent ""))
+    (lambda args
+      (format #t "~a calling ~a\n" indent (cons name args))
+      (set! indent (string-append indent " "))
+      (let ((result (apply f args)))
+        (string-truncate! indent (- (string-length indent) 1))
+        (format #t "~a done ~a\n" indent (cons name args))
+        result))))
+
 (define (fib-2)
   (define top (mk-process (lambda (process) 'done)))
   (define
@@ -141,6 +151,8 @@
            n
            (+ (call fib (- n 1))
               (call fib (- n 2)))))))
+
+  (set! fib (trace-process 'fib fib))
 
   (lambda (n)
     (let ((result (call fib n)))
