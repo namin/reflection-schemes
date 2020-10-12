@@ -4,4 +4,5 @@
   (format #t ";; LOADING ~a\n" fn)
   (load fn))
 
-(load "os_tests.scm")
+(test_load "evl_tests.scm")
+(test_load "os_tests.scm")
