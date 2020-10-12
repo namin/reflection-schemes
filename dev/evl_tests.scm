@@ -39,6 +39,23 @@
  (evl `((,y (lambda (f) (lambda (x) x))) 3) '())
  3)
 
+(define (trace-process-factorial f)
+  (let ((indent ""))
+    (lambda args
+      (let ((exp (car args))
+            (env (cadr args)))
+        (if (and (pair? exp) (eq? (car exp) 'factorial))
+            (begin
+              (format #t "~a evaluating ~a with ~a\n" indent exp (lookup 'n env))
+              (set! indent (string-append indent " "))
+              (let ((result (apply f args)))
+                (string-truncate! indent (- (string-length indent) 1))
+                (format #t "~a done ~a with ~a: ~a\n" indent exp (lookup 'n env) (gets result '(env result)))
+                result))
+            (apply f args))))))
+
+
+(define evl-trace-factorial (evl0 trace-process-factorial))
 (define factorial
   '(lambda (factorial)
      (lambda (n)
@@ -47,9 +64,6 @@
            (* n (factorial (- n 1)))))))
 
 (eg
- (evl `((,y ,factorial) 6) '())
+ (evl-trace-factorial `((,y ,factorial) 6) '())
  720)
-
-
-
 

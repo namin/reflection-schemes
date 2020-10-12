@@ -9,22 +9,7 @@
 (define (extend-env xs vs env)
   (append (map cons xs vs) env))
 
-(define (trace-process-factorial name f)
-  (let ((indent ""))
-    (lambda args
-      (let ((exp (car args))
-            (env (cadr args)))
-        (if (and (pair? exp) (eq? (car exp) 'factorial))
-            (begin
-              (format #t "~a evaluating ~a with ~a\n" indent exp (lookup 'n env))
-              (set! indent (string-append indent " "))
-              (let ((result (apply f args)))
-                (string-truncate! indent (- (string-length indent) 1))
-                (format #t "~a done ~a with ~a: ~a\n" indent exp (lookup 'n env) (gets result '(env result)))
-                result))
-            (apply f args))))))
-
-(define (evl0)
+(define (evl0 f)
   (define top (mk-process (lambda (process) 'done)))
   (define evl
     (driver-process
@@ -56,7 +41,7 @@
                  (call evl body (extend-env xs vs envf)))
                (error 'evl (format "unapplicable ~a" f)))))))))
 
-  (set! evl (trace-process-factorial 'evl evl))
+  (set! evl (f evl))
 
   (lambda (exp env)
     (let ((result (call evl exp env)))
@@ -64,4 +49,4 @@
       (step*)
       result)))
 
-(define evl (evl0))
+(define evl (evl0 (lambda (x) x)))
