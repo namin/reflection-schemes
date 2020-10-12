@@ -61,7 +61,7 @@
               (upd! env2 'n (- (get env 'n) 2))
               (wait this (schedule-fun p-fib env2))
               (set! result (+ result (get env2 'result)))
-              (upd! env'result result))))))
+              (upd! env 'result result))))))
 
   (define (fib n)
     (fun* p-fib (list (cons 'n n))))
