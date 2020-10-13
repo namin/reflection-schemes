@@ -31,6 +31,15 @@
          (if (call evl (cadr exp) env)
              (call evl (caddr exp) env)
              (call evl (cadddr exp) env)))
+        ((eq? (car exp) 'speculate)
+         (let ((if-exp (cadddr exp)))
+           (if (call evl (cadr if-exp) env)
+               (begin
+                 (set-car! (cdr exp) (+ 1 (cadr exp)))
+                 (call evl (caddr if-exp) env))
+               (begin
+                 (set-car! (cddr exp) (+ 1 (caddr exp)))
+                 (call evl (cadddr if-exp) env)))))
         ((eq? (car exp) 'lambda)
          `(closure ,@(cdr exp) ,env))
         ((eq? (car exp) '*)

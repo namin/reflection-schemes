@@ -72,3 +72,7 @@
  '(lambda (factorial)
     (lambda (n)
       (speculate 0 0 (if (= n 0) 1 (* n (factorial (- n 1))))))))
+
+(eg
+ (evl (add-speculation `((,y ,factorial) 6)) '())
+ 720)
