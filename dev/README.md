@@ -19,3 +19,7 @@ exploration of reflective architectures in Scheme
 - `schedule`: `process -> ()`
 - `wait`: `process, process -> ()`
 - `step*`: `() -> ()`
+
+## Notes
+
+The implementation chooses what to expose by choosing when it "yields".
