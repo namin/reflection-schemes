@@ -73,6 +73,27 @@
     (lambda (n)
       (speculate 0 0 (if (= n 0) 1 (* n (factorial (- n 1))))))))
 
+(define (trace-process-speculation f)
+  (let ((indent ""))
+    (lambda args
+      (let ((exp (car args))
+            (env (cadr args)))
+        (if (and (pair? exp) (eq? (car exp) 'speculate))
+            (begin
+              (format #t "~a speculating ~a ~a\n" indent (cadr exp) (caddr exp))
+              (set! indent (string-append indent " "))
+              (let ((result (apply f args)))
+                (string-truncate! indent (- (string-length indent) 1))
+              (format #t "~a done speculating ~a ~a\n" indent (cadr exp) (caddr exp))
+                result))
+            (apply f args))))))
+
+(define evl-trace-speculation (evl0 trace-process-speculation))
+
 (eg
  (evl (add-speculation `((,y ,factorial) 6)) '())
+ 720)
+
+(eg
+ (evl-trace-speculation (add-speculation `((,y ,factorial) 6)) '())
  720)
