@@ -67,3 +67,8 @@
  (evl-trace-factorial `((,y ,factorial) 6) '())
  720)
 
+(eg
+ (add-speculation factorial)
+ '(lambda (factorial)
+    (lambda (n)
+      (speculate 0 0 (if (= n 0) 1 (* n (factorial (- n 1))))))))
