@@ -14,12 +14,6 @@
   (upd! caller 'status 'blocked)
   (step*))
 
-(define (within-wait caller callee resume)
-  (schedule callee)
-  (wait caller callee)
-  (upd! caller 'status 'ready)
-  (resume caller))
-
 (define (pick!)
   (let ((process (car scheduled)))
     (set! scheduled (cdr scheduled))
