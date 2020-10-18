@@ -15,12 +15,10 @@
   (step*))
 
 (define (within-wait caller callee resume)
-  (upd! caller 'fun resume)
   (schedule callee)
   (wait caller callee)
   (upd! caller 'status 'ready)
-  (schedule caller)
-  (step*))
+  (resume caller))
 
 (define (pick!)
   (let ((process (car scheduled)))
