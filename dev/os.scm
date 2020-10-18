@@ -1,9 +1,7 @@
 (define scheduled '())
-(define continuation (lambda (x) x))
 
 (define (reset!)
-  (set! scheduled '())
-  (set! continuation (lambda (x) x)))
+  (set! scheduled '()))
 
 (define (schedule process)
   (upd! process 'status 'ready)
@@ -11,13 +9,18 @@
   process)
 
 (define (wait caller callee)
-  (call/cc
-   (lambda (k)
-     (upd! callee 'callers (cons caller (get callee 'callers '())))
-     (upd! caller 'callees (cons callee (get caller 'callees '())))
-     (upd! caller 'status 'blocked)
-     (upd! caller 'resume (lambda () (k 'resume)))
-     (step*))))
+  (upd! callee 'callers (cons caller (get callee 'callers '())))
+  (upd! caller 'callees (cons callee (get caller 'callees '())))
+  (upd! caller 'status 'blocked)
+  (step*))
+
+(define (within-wait caller callee resume)
+  (upd! caller 'fun resume)
+  (schedule callee)
+  (wait caller callee)
+  (upd! caller 'status 'ready)
+  (schedule caller)
+  (step*))
 
 (define (pick!)
   (let ((process (car scheduled)))
@@ -38,20 +41,15 @@
         (cond
           ((eq? 'ready status)
            (upd! process 'status 'running)
-           (let ((resume (get process 'resume #f)))
-             (if resume
-                 (begin
-                   (upd! process 'resume #f)
-                   (run process resume))
-                 (run process (get process 'fun) process))
-             (upd! process 'status 'terminated)
-             (for-each
-              (lambda (caller)
-                 (let ((callees (remq process (get caller 'callees))))
-                   (upd! caller 'callees callees)
-                   (if (and (null? callees) (eq? 'blocked (get caller 'status #f)))
-                       (upd! caller 'status 'ready))))
-               (get process 'callers '()))))
+           (run process (get process 'fun) process)
+           (upd! process 'status 'terminated)
+           (for-each
+            (lambda (caller)
+              (let ((callees (remq process (get caller 'callees))))
+                (upd! caller 'callees callees)
+                (if (and (null? callees) (eq? 'blocked (get caller 'status #f)))
+                    (upd! caller 'status 'ready))))
+            (get process 'callers '())))
           ((eq? 'blocked status)
            (schedule process))
           (else (error 'step (format "unexpected status ~a" status)))))))
