@@ -84,27 +84,29 @@
 
 (define (trace-process-speculation f)
   (let ((indent ""))
-    (lambda args
-      (let ((exp (car args))
-            (env (cadr args)))
-        (if (and (pair? exp) (eq? (car exp) 'speculate))
-            (begin
-              (format #t "~a speculating ~a ~a\n" indent (cadr exp) (caddr exp))
-              (let ((old-indent indent))
-                (set! indent (string-append indent " "))
-                (let ((result
-                       (let ((if-exp (cadddr exp)))
-                         (if (gets ((trace-process-speculation f) (cadr if-exp) env) '(env result))
-                             (begin
-                               (set-car! (cdr exp) (+ 1 (cadr exp)))
-                               ((trace-process-speculation f) (caddr if-exp) env))
-                             (begin
-                               (set-car! (cddr exp) (+ 1 (caddr exp)))
-                               ((trace-process-speculation f) (cadddr if-exp) env))))))
-                  (set! indent old-indent)
-                  (format #t "~a done speculating ~a ~a\n" indent (cadr exp) (caddr exp))
-                  result)))
-            (apply f args))))))
+    (define rec
+      (lambda args
+        (let ((exp (car args))
+              (env (cadr args)))
+          (if (and (pair? exp) (eq? (car exp) 'speculate))
+              (begin
+                (format #t "~a speculating ~a ~a\n" indent (cadr exp) (caddr exp))
+                (let ((old-indent indent))
+                  (set! indent (string-append indent " "))
+                  (let ((result
+                         (let ((if-exp (cadddr exp)))
+                           (if (gets (rec (cadr if-exp) env) '(env result))
+                               (begin
+                                 (set-car! (cdr exp) (+ 1 (cadr exp)))
+                                 (rec (caddr if-exp) env))
+                               (begin
+                                 (set-car! (cddr exp) (+ 1 (caddr exp)))
+                                 (rec (cadddr if-exp) env))))))
+                    (set! indent old-indent)
+                    (format #t "~a done speculating ~a ~a\n" indent (cadr exp) (caddr exp))
+                    result)))
+              (apply f args)))))
+    rec))
 
 (define evl-trace-speculation (evl0 trace-process-speculation))
 
