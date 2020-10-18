@@ -92,13 +92,13 @@
               (set! indent (string-append indent " "))
               (let ((result
                      (let ((if-exp (cadddr exp)))
-                       (if (gets (f (cadr if-exp) env) '(env result))
+                       (if (gets ((trace-process-speculation f) (cadr if-exp) env) '(env result))
                            (begin
                              (set-car! (cdr exp) (+ 1 (cadr exp)))
-                             (f (caddr if-exp) env))
+                             ((trace-process-speculation f) (caddr if-exp) env))
                            (begin
                              (set-car! (cddr exp) (+ 1 (caddr exp)))
-                             (f (cadddr if-exp) env))))))
+                             ((trace-process-speculation f) (cadddr if-exp) env))))))
                 (string-truncate! indent (- (string-length indent) 1))
               (format #t "~a done speculating ~a ~a\n" indent (cadr exp) (caddr exp))
               result))
@@ -110,9 +110,9 @@
  (evl-trace-speculation (add-speculation `((,y ,factorial) 6)) '())
  720)
 
-#|
-nested ifs don't work
+;; ensure nested ifs work
 (eg
- (evl-trace-speculation (add-speculation `(if (if #f #t #f) #f #t)) '())
+ (evl-trace-speculation
+  (add-speculation
+   `(if (if #f #t #f) (if #f #f #f) (if #t #t #t))) '())
  #t)
-|#
