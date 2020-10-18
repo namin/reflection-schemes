@@ -47,11 +47,12 @@
         (if (and (pair? exp) (eq? (car exp) 'factorial))
             (begin
               (format #t "~a evaluating ~a with ~a\n" indent exp (lookup 'n env))
-              (set! indent (string-append indent " "))
-              (let ((result (apply f args)))
-                (string-truncate! indent (- (string-length indent) 1))
-                (format #t "~a done ~a with ~a: ~a\n" indent exp (lookup 'n env) (gets result '(env result)))
-                result))
+              (let ((old-indent indent))
+                (set! indent (string-append indent " "))
+                (let ((result (apply f args)))
+                  (set! indent old-indent)
+                  (format #t "~a done ~a with ~a: ~a\n" indent exp (lookup 'n env) (gets result '(env result)))
+                  result)))
             (apply f args))))))
 
 
@@ -89,19 +90,20 @@
         (if (and (pair? exp) (eq? (car exp) 'speculate))
             (begin
               (format #t "~a speculating ~a ~a\n" indent (cadr exp) (caddr exp))
-              (set! indent (string-append indent " "))
-              (let ((result
-                     (let ((if-exp (cadddr exp)))
-                       (if (gets ((trace-process-speculation f) (cadr if-exp) env) '(env result))
-                           (begin
-                             (set-car! (cdr exp) (+ 1 (cadr exp)))
-                             ((trace-process-speculation f) (caddr if-exp) env))
-                           (begin
-                             (set-car! (cddr exp) (+ 1 (caddr exp)))
-                             ((trace-process-speculation f) (cadddr if-exp) env))))))
-                (string-truncate! indent (- (string-length indent) 1))
-                (format #t "~a done speculating ~a ~a\n" indent (cadr exp) (caddr exp))
-                result))
+              (let ((old-indent indent))
+                (set! indent (string-append indent " "))
+                (let ((result
+                       (let ((if-exp (cadddr exp)))
+                         (if (gets ((trace-process-speculation f) (cadr if-exp) env) '(env result))
+                             (begin
+                               (set-car! (cdr exp) (+ 1 (cadr exp)))
+                               ((trace-process-speculation f) (caddr if-exp) env))
+                             (begin
+                               (set-car! (cddr exp) (+ 1 (caddr exp)))
+                               ((trace-process-speculation f) (cadddr if-exp) env))))))
+                  (set! indent old-indent)
+                  (format #t "~a done speculating ~a ~a\n" indent (cadr exp) (caddr exp))
+                  result)))
             (apply f args))))))
 
 (define evl-trace-speculation (evl0 trace-process-speculation))
