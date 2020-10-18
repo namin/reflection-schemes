@@ -22,4 +22,4 @@ exploration of reflective architectures in Scheme
 
 ## Notes
 
-The implementation chooses what to expose by choosing when it "yields".
+The object implementation chooses what to expose by choosing when it "yields".
