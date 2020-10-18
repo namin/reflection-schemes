@@ -1,5 +1,36 @@
 (reset!)
 
+(define (test-coop)
+  (define fact
+    (mk-process
+     (lambda (this)
+       (if (= 0 (get this 'n))
+           (begin
+             (upd! this 'done #t)
+             (upd! this 'result (get this 'acc)))
+           (begin
+             (upd! this 'acc (* (get this 'n) (get this 'acc 1)))
+             (upd! this 'n (- (get this 'n) 1))))
+       (upd! monitor 'status 'ready)
+       (schedule monitor))))
+  (define monitor
+    (mk-process
+     (lambda (this)
+       (printf "~a: ~a\n" (get fact 'n) (get fact 'acc))
+       (if (get fact 'done #f)
+           (printf "done with ~a\n" (get fact 'result))
+           (begin
+             (upd! fact 'status 'ready)
+             (schedule fact))))))
+  (upd! fact 'n 6)
+  (schedule fact)
+  (step*)
+  720)
+
+(eg
+ (test-coop)
+ 720)
+
  (define (test-wait)
    (define q (mk-process
               (lambda (this) (upd! this 'result 1))))
