@@ -9,14 +9,6 @@
 (define (extend-env xs vs env)
   (append (map cons xs vs) env))
 
-(define add-speculation
-  (lambda (exp)
-    (if (pair? exp)
-        (if (eq? (car exp) 'if)
-            `(speculate 0 0 ,(map add-speculation exp))
-            (map add-speculation exp))
-        exp)))
-
 (define (evl0 f)
   (define top (mk-process (lambda (process) 'done)))
   (define evl
@@ -31,15 +23,6 @@
          (if (call evl (cadr exp) env)
              (call evl (caddr exp) env)
              (call evl (cadddr exp) env)))
-        ((eq? (car exp) 'speculate)
-         (let ((if-exp (cadddr exp)))
-           (if (call evl (cadr if-exp) env)
-               (begin
-                 (set-car! (cdr exp) (+ 1 (cadr exp)))
-                 (call evl (caddr if-exp) env))
-               (begin
-                 (set-car! (cddr exp) (+ 1 (caddr exp)))
-                 (call evl (cadddr if-exp) env)))))
         ((eq? (car exp) 'lambda)
          `(closure ,@(cdr exp) ,env))
         ((eq? (car exp) '*)
