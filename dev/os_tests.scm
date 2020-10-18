@@ -1,6 +1,6 @@
 (reset!)
 
- (define (test-wait1)
+ (define (test-wait)
    (define q (mk-process
               (lambda (this) (upd! this 'result 1))))
    (define p (mk-process
@@ -13,26 +13,8 @@
    (list (get p 'status) (get p 'result)))
 
 (eg
- (test-wait1)
+ (test-wait)
  (list 'terminated 2))
-
- (define (test-wait2)
-   (define q (mk-process
-              (lambda (this) (upd! this 'result 1))))
-   (define p (mk-process
-              (lambda (this)
-                (upd! this 'result (+ 2 (get this 'result 0)))
-                (within-wait this q
-                      (lambda (this)
-                        (upd! this 'result
-                              (+ (get this 'result) (get q 'result))))))))
-   (schedule p)
-   (step*)
-   (list 'terminated (get p 'result)))
-
-(eg
- (test-wait2)
- (list 'terminated 3))
 
 (define (is-even?-0)
   (define
