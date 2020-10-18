@@ -31,6 +31,33 @@
  (test-coop)
  720)
 
+(define (test-coop2)
+  (define acc (dict '((value . 1))))
+  (define (fact n)
+    (mk-process
+     (lambda (this)
+       (if (= n 0)
+           (upd! acc 'done #t)
+           (let ((rec (fact (- n 1))))
+             (upd! acc 'value (* n (get acc 'value)))
+             (schedule rec)
+             (wait this rec))))))
+  (define (monitor)
+    (mk-process
+     (lambda (this)
+       (printf "~a\n" (get acc 'value))
+       (unless (get acc 'done #f)
+         (schedule (monitor))))))
+
+  (schedule (fact 6))
+  (schedule (monitor))
+  (step*)
+  (get acc 'value))
+
+(eg
+ (test-coop2)
+ 720)
+
  (define (test-wait)
    (define q (mk-process
               (lambda (this) (upd! this 'result 1))))
