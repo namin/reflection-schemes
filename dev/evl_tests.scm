@@ -100,8 +100,8 @@
                              (set-car! (cddr exp) (+ 1 (caddr exp)))
                              ((trace-process-speculation f) (cadddr if-exp) env))))))
                 (string-truncate! indent (- (string-length indent) 1))
-              (format #t "~a done speculating ~a ~a\n" indent (cadr exp) (caddr exp))
-              result))
+                (format #t "~a done speculating ~a ~a\n" indent (cadr exp) (caddr exp))
+                result))
             (apply f args))))))
 
 (define evl-trace-speculation (evl0 trace-process-speculation))
