@@ -109,3 +109,10 @@
 (eg
  (evl-trace-speculation (add-speculation `((,y ,factorial) 6)) '())
  720)
+
+#|
+nested ifs don't work
+(eg
+ (evl-trace-speculation (add-speculation `(if (if #f #t #f) #f #t)) '())
+ #t)
+|#
