@@ -29,6 +29,6 @@ Maybe reflection here would consist in seamlessly requiring and migrating instea
 - Use Scheme structs for our stamped structs.
 - Use an explicit requirement
 ```
-(let ((o (require-stamp o (stamp1 stamp2))))
+(let ((o (require-stamp o '(stamp1 stamp2))))
     ...)
 ```

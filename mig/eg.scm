@@ -19,4 +19,14 @@
      (begin
        (format #t "TODO ~a\n" 'tested-expression)))))
 
+(define (try thunk)
+  (call/cc
+    (lambda (k)
+      (with-exception-handler
+        (lambda (x) (k 'error))
+        thunk))))
 
+(define-syntax eg_error
+  (syntax-rules ()
+    ((_ tested-expression)
+     (eg (try (lambda () tested-expression)) 'error))))
