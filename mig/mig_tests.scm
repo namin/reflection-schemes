@@ -14,6 +14,10 @@
   ;; hack: this relies on the internal representation of structs as vectors
   (lambda (o) (vector-ref o 0)))
 
+(define foo24-x
+  ;; hack again
+  (lambda (o) (vector-ref o 1)))
+
 (define foo1-to-foo2
   (lambda (o)
     (make-foo2 (foo1-n o) 0)))
@@ -44,7 +48,7 @@
     (cond
       ((null? xs) #f)
       ((predicate (car xs)) => (lambda (x) x))
-      (else (some predicate (cdr xs))))))
+      (else (map-some predicate (cdr xs))))))
 
 (define find-migration
   (lambda (stamp stamps)
@@ -83,3 +87,24 @@
 
 (eg_error
  (my (make-foo4 3)))
+
+(define my2
+  (lambda (o)
+    (let ((o (require-stamp o '(foo2 foo4))))
+      (* 2 (foo24-x o)))))
+
+(eg
+ (my2 (make-foo1 3))
+ 6)
+
+(eg
+ (my2 (make-foo2 4 1))
+ 8)
+
+(eg
+ (my2 (make-foo3 10 4 1))
+ 8)
+
+(eg
+ (my2 (make-foo4 3))
+ 6)
